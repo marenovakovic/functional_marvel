@@ -1,0 +1,19 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    tools:context="com.marko.functional_marvel.heroes.HeroesFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/heroesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:listitem="@layout/grid_item_hero"
+        tools:spanCount="3"/>
+
+
+
+</FrameLayout>
