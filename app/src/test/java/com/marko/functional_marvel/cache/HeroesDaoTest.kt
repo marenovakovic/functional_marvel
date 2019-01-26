@@ -1,8 +1,8 @@
 package com.marko.functional_marvel.cache
 
 import com.marko.functional_marvel.entities.HeroCache
-import com.marko.functional_marvel.heroCache
-import com.marko.functional_marvel.sampleDaoHeroes
+import com.marko.functional_marvel.sampledata.heroCache
+import com.marko.functional_marvel.sampledata.sampleDaoHeroes
 import org.junit.Test
 
 class HeroesDaoTest : DatabaseTest() {

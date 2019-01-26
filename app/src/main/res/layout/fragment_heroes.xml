@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:listitem="@layout/grid_item_hero"
+        tools:listitem="@layout/list_item_hero"
         tools:spanCount="3"/>
 
 

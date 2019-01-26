@@ -2,8 +2,8 @@ package com.marko.functional_marvel.usecases
 
 import arrow.effects.DeferredK
 import arrow.effects.unsafeRunSync
-import com.marko.functional_marvel.domain.HeroesRepository
-import com.marko.functional_marvel.hero
+import com.marko.functional_marvel.domain.heroes.HeroesRepository
+import com.marko.functional_marvel.sampledata.hero
 import com.marko.functional_marvel.injection.HKImplementation
 import io.kotlintest.specs.StringSpec
 import io.mockk.every

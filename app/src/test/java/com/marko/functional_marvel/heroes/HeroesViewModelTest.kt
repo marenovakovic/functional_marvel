@@ -1,12 +1,12 @@
-package com.marko.functional_marvel.presentation
+package com.marko.functional_marvel.heroes
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import arrow.effects.DeferredK
-import com.marko.functional_marvel.domain.HeroesRepository
+import com.marko.functional_marvel.domain.heroes.HeroesRepository
 import com.marko.functional_marvel.entities.Heroes
 import com.marko.functional_marvel.injection.HKImplementation
-import com.marko.functional_marvel.sampleHeroes
+import com.marko.functional_marvel.sampledata.sampleHeroes
 import com.marko.functional_marvel.usecases.FetchHeroes
 import com.marko.functional_marvel.usecases.SetFavorite
 import com.marko.functional_marvel.usecases.invoke
@@ -15,9 +15,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.TestInstance
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class HeroesViewModelTest {
 
 	@get:Rule
@@ -26,7 +24,8 @@ class HeroesViewModelTest {
 	private val heroesRepository = mockk<HeroesRepository<HKImplementation>>()
 	private val fetchHeroes = FetchHeroes(heroesRepository)
 	private val setFavorite = SetFavorite(heroesRepository)
-	private val viewModel = HeroesViewModel(fetchHeroes, setFavorite)
+	private val viewModel =
+		HeroesViewModel(fetchHeroes, setFavorite)
 
 	@Test
 	fun `test does fetch heroes exposes right result on success and does it calls use case`() {

@@ -3,7 +3,7 @@ package com.marko.functional_marvel.cache
 import arrow.Kind
 import arrow.core.Try
 import arrow.effects.typeclasses.Async
-import com.marko.functional_marvel.data.HeroesDataSource
+import com.marko.functional_marvel.data.heroes.HeroesDataSource
 import com.marko.functional_marvel.entities.Hero
 import com.marko.functional_marvel.entities.HeroId
 import com.marko.functional_marvel.entities.Heroes
@@ -22,7 +22,7 @@ import javax.inject.Inject
  * [F] Higher-kind type
  */
 class HeroesCacheSource<F> @Inject constructor(
-	async: Async<F>,
+	private val async: Async<F>,
 	private val heroesDao: HeroesDao
 ) : HeroesDataSource<F>, Async<F> by async {
 
@@ -50,11 +50,9 @@ class HeroesCacheSource<F> @Inject constructor(
 			callback(heroes)
 		}
 
-	override fun <A, B> Kind<F, A>.ap(ff: Kind<F, (A) -> B>): Kind<F, B> {
-		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-	}
+	override fun <A, B> Kind<F, A>.ap(ff: Kind<F, (A) -> B>): Kind<F, B> =
+		async.run { this@ap.ap(ff) }
 
-	override fun <A, B> Kind<F, A>.map(f: (A) -> B): Kind<F, B> {
-		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-	}
+	override fun <A, B> Kind<F, A>.map(f: (A) -> B): Kind<F, B> =
+		async.run { this@map.map(f) }
 }

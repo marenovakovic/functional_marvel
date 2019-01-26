@@ -1,4 +1,4 @@
-package com.marko.functional_marvel.data
+package com.marko.functional_marvel.data.heroes
 
 import arrow.Kind
 import com.marko.functional_marvel.entities.Hero

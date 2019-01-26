@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/scene"
-    tools:context="com.marko.functional_marvel.heroes.HeroDetailsFragment">
+    tools:context="com.marko.functional_marvel.herodetails.HeroDetailsFragment">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/heroDetailsImage"
         android:layout_width="144dp"
         android:layout_height="144dp"

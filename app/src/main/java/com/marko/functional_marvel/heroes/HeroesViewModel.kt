@@ -1,4 +1,4 @@
-package com.marko.functional_marvel.presentation
+package com.marko.functional_marvel.heroes
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -34,13 +34,11 @@ class HeroesViewModel @Inject constructor(
 	val error: LiveData<Throwable>
 		get() = _error
 
-	fun fetch() =
-		fetchHeroes().unsafeRunAsync {
-			it.fold(_error::postValue, _heroes::postValue)
-		}
+	fun fetch() = fetchHeroes().unsafeRunAsync {
+		it.fold(_error::postValue, _heroes::postValue)
+	}
 
-	fun saveHero(hero: Hero) =
-		setFavorite(hero).unsafeRunAsync {
-			it.fold(_error::postValue) { }
-		}
+	fun saveHero(hero: Hero) = setFavorite(hero).unsafeRunAsync {
+		it.fold(_error::postValue) { }
+	}
 }

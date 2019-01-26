@@ -1,4 +1,4 @@
-package com.marko.functional_marvel
+package com.marko.functional_marvel.sampledata
 
 import com.karumi.marvelapiclient.model.ComicResourceDto
 import com.karumi.marvelapiclient.model.EventResourceDto

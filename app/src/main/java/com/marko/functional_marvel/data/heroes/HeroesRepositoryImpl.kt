@@ -1,8 +1,8 @@
-package com.marko.functional_marvel.data
+package com.marko.functional_marvel.data.heroes
 
 import arrow.Kind
 import arrow.effects.typeclasses.MonadDefer
-import com.marko.functional_marvel.domain.HeroesRepository
+import com.marko.functional_marvel.domain.heroes.HeroesRepository
 import com.marko.functional_marvel.entities.Hero
 import com.marko.functional_marvel.entities.Heroes
 import com.marko.functional_marvel.exceptions.ContentNotAvailable
@@ -14,6 +14,8 @@ import javax.inject.Named
 /**
  * [HeroesRepository] implementation. Implements [MonadDefer] by delegating
  *
+ * [F] Higher-kind type
+ *
  * @param monadDefer [MonadDefer] for lazy evaluation
  *
  * @param heroesRemoteSource [HeroesDataSource] API access point
@@ -21,7 +23,7 @@ import javax.inject.Named
  * @param heroesCacheSource [HeroesDataSource] database access point
  */
 class HeroesRepositoryImpl<F> @Inject constructor(
-	monadDefer: MonadDefer<F>,
+	private val monadDefer: MonadDefer<F>,
 	@Named(DI.HEROES_REMOTE_SOURCE) private val heroesRemoteSource: HeroesDataSource<F>,
 	@Named(DI.HEROES_CACHE_SOURCE) private val heroesCacheSource: HeroesDataSource<F>
 ) : HeroesRepository<F>, MonadDefer<F> by monadDefer {
@@ -50,4 +52,10 @@ class HeroesRepositoryImpl<F> @Inject constructor(
 	override fun saveHero(hero: Hero): Kind<F, Unit> =
 		defer { heroesCacheSource.saveHero(hero) }
 			.handleErrorWith { raiseError(SaveException) }
+
+	override fun <A, B> Kind<F, A>.ap(ff: Kind<F, (A) -> B>): Kind<F, B> =
+		monadDefer.run { this@ap.ap(ff) }
+
+	override fun <A, B> Kind<F, A>.map(f: (A) -> B): Kind<F, B> =
+		monadDefer.run { this@map.map(f) }
 }

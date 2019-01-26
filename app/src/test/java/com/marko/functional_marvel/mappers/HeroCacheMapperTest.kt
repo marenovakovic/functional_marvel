@@ -2,10 +2,10 @@ package com.marko.functional_marvel.mappers
 
 import com.marko.functional_marvel.entities.Hero
 import com.marko.functional_marvel.entities.HeroCache
-import com.marko.functional_marvel.hero
-import com.marko.functional_marvel.heroCache
-import com.marko.functional_marvel.sampleHeroes
-import com.marko.functional_marvel.sampleHeroesCache
+import com.marko.functional_marvel.sampledata.hero
+import com.marko.functional_marvel.sampledata.heroCache
+import com.marko.functional_marvel.sampledata.sampleHeroes
+import com.marko.functional_marvel.sampledata.sampleHeroesCache
 import io.kotlintest.specs.StringSpec
 
 internal class HeroCacheMapperTest : StringSpec() {

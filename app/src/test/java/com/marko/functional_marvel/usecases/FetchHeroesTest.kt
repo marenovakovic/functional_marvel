@@ -1,12 +1,11 @@
-package com.marko.functional_marvel.domain
+package com.marko.functional_marvel.usecases
 
 import arrow.effects.DeferredK
 import arrow.effects.unsafeRunAsync
+import com.marko.functional_marvel.domain.heroes.HeroesRepository
 import com.marko.functional_marvel.entities.Heroes
 import com.marko.functional_marvel.injection.HKImplementation
-import com.marko.functional_marvel.sampleHeroes
-import com.marko.functional_marvel.usecases.FetchHeroes
-import com.marko.functional_marvel.usecases.invoke
+import com.marko.functional_marvel.sampledata.sampleHeroes
 import io.kotlintest.Description
 import io.kotlintest.assertions.arrow.either.shouldBeLeft
 import io.kotlintest.assertions.arrow.either.shouldBeRight
@@ -24,7 +23,7 @@ internal class FetchHeroesTest : StringSpec() {
 
 	init {
 		val heroesRepository = mockk<HeroesRepository<HKImplementation>>()
-		val fetchHeroes = FetchHeroes(heroesRepository)
+		val fetchHeroes = FetchHeroes(heroesRepository = heroesRepository)
 
 		"check result and does use case calls repository" {
 

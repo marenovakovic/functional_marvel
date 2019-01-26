@@ -7,20 +7,15 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.marko.functional_marvel.R
 import com.marko.functional_marvel.base.BaseFragment
 import com.marko.functional_marvel.entities.Hero
 import com.marko.functional_marvel.injection.viewmodel.ViewModelFactory
-import com.marko.functional_marvel.presentation.HeroesViewModel
 import kotlinx.android.synthetic.main.fragment_heroes.*
 import javax.inject.Inject
 
 class HeroesFragment : BaseFragment() {
-
-	companion object {
-		private const val GRID_SPAN = 3
-	}
 
 	@Inject
 	lateinit var factory: ViewModelFactory
@@ -50,9 +45,8 @@ class HeroesFragment : BaseFragment() {
 
 		heroesRecyclerView.apply {
 			adapter = heroesAdapter
-			layoutManager =
-				StaggeredGridLayoutManager(GRID_SPAN, StaggeredGridLayoutManager.VERTICAL)
-					.apply { isItemPrefetchEnabled = true }
+			layoutManager = LinearLayoutManager(context).apply { isItemPrefetchEnabled = true }
+			setHasFixedSize(true)
 		}
 	}
 

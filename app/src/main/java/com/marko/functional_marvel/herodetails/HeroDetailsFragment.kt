@@ -1,4 +1,4 @@
-package com.marko.functional_marvel.heroes
+package com.marko.functional_marvel.herodetails
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,7 +14,10 @@ import kotlinx.android.synthetic.main.fragment_hero_details.*
 class HeroDetailsFragment : Fragment() {
 
 	private val hero: Hero by lazy(LazyThreadSafetyMode.NONE) {
-		arguments !!.let { HeroDetailsFragmentArgs.fromBundle(it).hero }
+		arguments !!.let {
+			HeroDetailsFragmentArgs.fromBundle(it)
+				.hero
+		}
 	}
 
 	override fun onCreateView(

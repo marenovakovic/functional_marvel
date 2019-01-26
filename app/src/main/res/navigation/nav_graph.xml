@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/heroDetailsFragment"
-        android:name="com.marko.functional_marvel.heroes.HeroDetailsFragment"
+        android:name="com.marko.functional_marvel.herodetails.HeroDetailsFragment"
         android:label="fragment_hero_details"
         tools:layout="@layout/fragment_hero_details">
         <argument

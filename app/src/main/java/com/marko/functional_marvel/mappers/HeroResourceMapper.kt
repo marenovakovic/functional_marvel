@@ -10,7 +10,7 @@ import com.marko.functional_marvel.entities.HeroResource
  *
  * @return [HeroResource] mapped from [MarvelResources]
  */
-fun <T> MarvelResources<T>.toHeroResource(): HeroResource<T> = HeroResource(
+fun <T> MarvelResources<T>.toResource(): HeroResource<T> = HeroResource(
 	available = available,
 	returned = returned,
 	collectionUri = collectionUri,
@@ -24,5 +24,5 @@ fun <T> MarvelResources<T>.toHeroResource(): HeroResource<T> = HeroResource(
  *
  * @return [HeroResource] [List] mapped from [MarvelResources] [List]
  */
-fun <T> List<MarvelResources<T>>.toHeroResource(): List<HeroResource<T>> =
-	map { it.toHeroResource() }
+fun <T> List<MarvelResources<T>>.toResource(): List<HeroResource<T>> =
+	map { it.toResource() }

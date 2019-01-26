@@ -20,10 +20,10 @@ fun CharacterDto.toHero(): Hero = Hero(
 	resourceUri = resourceUri,
 	urls = urls.toHeroUrl(),
 	thumbnail = thumbnail,
-	comics = comics.toHeroResource(),
-	stories = stories.toHeroResource(),
-	events = events.toHeroResource(),
-	series = series.toHeroResource()
+	comics = comics.toResource(),
+	stories = stories.toResource(),
+	events = events.toResource(),
+	series = series.toResource()
 )
 
 /**

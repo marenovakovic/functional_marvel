@@ -7,6 +7,7 @@ import arrow.effects.deferredk.monadDefer.monadDefer
 import arrow.effects.typeclasses.Async
 import arrow.effects.typeclasses.MonadDefer
 import com.karumi.marvelapiclient.CharacterApiClient
+import com.karumi.marvelapiclient.ComicApiClient
 import com.karumi.marvelapiclient.MarvelApiConfig
 import com.marko.functional_marvel.cache.MarvelDatabase
 import com.marko.functional_marvel.injection.HKImplementation
@@ -31,6 +32,10 @@ class AppModule(private val context: Context) {
 	@Singleton
 	@Provides
 	fun charactersClient(config: MarvelApiConfig): CharacterApiClient = CharacterApiClient(config)
+
+	@Singleton
+	@Provides
+	fun comicClient(config: MarvelApiConfig): ComicApiClient = ComicApiClient(config)
 
 	@Singleton
 	@Provides
