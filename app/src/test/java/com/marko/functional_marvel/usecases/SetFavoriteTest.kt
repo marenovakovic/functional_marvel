@@ -1,10 +1,10 @@
 package com.marko.functional_marvel.usecases
 
-import arrow.effects.DeferredK
-import arrow.effects.unsafeRunSync
+import arrow.effects.ObservableK
+import arrow.effects.value
 import com.marko.functional_marvel.domain.heroes.HeroesRepository
-import com.marko.functional_marvel.sampledata.hero
 import com.marko.functional_marvel.injection.HKImplementation
+import com.marko.functional_marvel.sampledata.hero
 import io.kotlintest.specs.StringSpec
 import io.mockk.every
 import io.mockk.mockk
@@ -21,13 +21,14 @@ internal class SetFavoriteTest : StringSpec() {
 
 			heroesRepository.stubSave()
 
-			setFavorite(hero).unsafeRunSync()
+			setFavorite(hero).value().test()
+				.assertComplete()
 
 			verify(exactly = 1) { heroesRepository.saveHero(hero) }
 		}
 	}
 
 	private fun HeroesRepository<HKImplementation>.stubSave() {
-		every { saveHero(any()) } returns DeferredK.just(Unit)
+		every { saveHero(any()) } returns ObservableK.just(Unit)
 	}
 }

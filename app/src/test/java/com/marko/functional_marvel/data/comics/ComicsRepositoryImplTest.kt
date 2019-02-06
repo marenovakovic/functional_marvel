@@ -1,13 +1,13 @@
 package com.marko.functional_marvel.data.comics
 
 import arrow.effects.DeferredK
+import arrow.effects.ForDeferredK
 import arrow.effects.deferredk.monadDefer.monadDefer
 import arrow.effects.unsafeRunAsync
 import arrow.effects.unsafeRunSync
 import com.marko.functional_marvel.entities.Comics
 import com.marko.functional_marvel.exceptions.ContentNotAvailable
 import com.marko.functional_marvel.exceptions.MarvelException
-import com.marko.functional_marvel.injection.HKImplementation
 import com.marko.functional_marvel.sampledata.sampleComics
 import io.kotlintest.Description
 import io.kotlintest.assertions.arrow.either.shouldBeRight
@@ -22,7 +22,7 @@ internal class ComicsRepositoryImplTest : StringSpec() {
 
 	override fun beforeTest(description: Description) = clearAllMocks()
 
-	private val comicsDataSource = mockk<ComicsDataSource<HKImplementation>>()
+	private val comicsDataSource = mockk<ComicsDataSource<ForDeferredK>>()
 	private val comicsRepository =
 		ComicsRepositoryImpl(
 			monadDefer = DeferredK.monadDefer(),

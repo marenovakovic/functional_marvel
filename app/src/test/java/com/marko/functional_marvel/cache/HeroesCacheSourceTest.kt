@@ -6,8 +6,8 @@ import arrow.effects.unsafeRunSync
 import com.marko.functional_marvel.entities.Hero
 import com.marko.functional_marvel.entities.HeroCache
 import com.marko.functional_marvel.entities.Heroes
-import com.marko.functional_marvel.sampledata.hero
 import com.marko.functional_marvel.mappers.toCache
+import com.marko.functional_marvel.sampledata.hero
 import com.marko.functional_marvel.sampledata.sampleHeroes
 import io.mockk.every
 import io.mockk.mockk

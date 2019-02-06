@@ -44,7 +44,6 @@ androidExtensions {
 dependencies {
 
     //Arrow
-    implementation "io.arrow-kt:arrow-typeclasses:$arrowVersion"
     implementation "io.arrow-kt:arrow-core:$arrowVersion"
     implementation "io.arrow-kt:arrow-syntax:$arrowVersion"
     implementation "io.arrow-kt:arrow-typeclasses:$arrowVersion"
@@ -55,6 +54,8 @@ dependencies {
     implementation "io.arrow-kt:arrow-instances-free:$arrowVersion"
     implementation "io.arrow-kt:arrow-effects:$arrowVersion"
     implementation "io.arrow-kt:arrow-effects-instances:$arrowVersion"
+    implementation "io.arrow-kt:arrow-effects-rx2:$arrowVersion"
+    implementation "io.arrow-kt:arrow-effects-rx2-instances:$arrowVersion"
     implementation "io.arrow-kt:arrow-effects-kotlinx-coroutines:$arrowVersion"
     implementation "io.arrow-kt:arrow-effects-kotlinx-coroutines-instances:$arrowVersion"
     implementation "io.arrow-kt:arrow-optics:$arrowVersion"
@@ -128,6 +129,11 @@ dependencies {
 
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+
+    implementation project(path: ":cache")
+    implementation project(path: ":remote")
+    implementation project(path: ":data")
+    implementation project(path: ":domain")
 
     // Testing
     testImplementation "androidx.arch.core:core-testing:$lifecycleVersion"

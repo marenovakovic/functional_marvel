@@ -1,9 +1,9 @@
 package com.marko.functional_marvel.app
 
 import android.content.Context
-import arrow.effects.DeferredK
-import arrow.effects.deferredk.async.async
-import arrow.effects.deferredk.monadDefer.monadDefer
+import arrow.effects.ObservableK
+import arrow.effects.observablek.async.async
+import arrow.effects.observablek.monadDefer.monadDefer
 import arrow.effects.typeclasses.Async
 import arrow.effects.typeclasses.MonadDefer
 import com.karumi.marvelapiclient.CharacterApiClient
@@ -43,9 +43,9 @@ class AppModule(private val context: Context) {
 
 	@Singleton
 	@Provides
-	fun async(): Async<HKImplementation> = DeferredK.async()
+	fun async(): Async<HKImplementation> = ObservableK.async()
 
 	@Singleton
 	@Provides
-	fun monadDefer(): MonadDefer<HKImplementation> = DeferredK.monadDefer()
+	fun monadDefer(): MonadDefer<HKImplementation> = ObservableK.monadDefer()
 }

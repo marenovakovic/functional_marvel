@@ -9,7 +9,7 @@ import arrow.Kind
  * [P] parameters need to execute business logic
  * [R] result of business logic execution
  */
-interface UseCase<out F, in P, R> {
+interface UseCase<out F, in P, out R> {
 
 	/**
 	 * Business logic is executed here

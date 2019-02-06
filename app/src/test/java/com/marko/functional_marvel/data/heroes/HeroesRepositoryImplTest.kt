@@ -1,15 +1,11 @@
 package com.marko.functional_marvel.data.heroes
 
-import arrow.effects.DeferredK
+import arrow.effects.*
 import arrow.effects.deferredk.monadDefer.monadDefer
-import arrow.effects.fix
-import arrow.effects.unsafeRunAsync
-import arrow.effects.unsafeRunSync
 import com.marko.functional_marvel.entities.Heroes
 import com.marko.functional_marvel.exceptions.ContentNotAvailable
 import com.marko.functional_marvel.exceptions.MarvelException
 import com.marko.functional_marvel.sampledata.hero
-import com.marko.functional_marvel.injection.HKImplementation
 import com.marko.functional_marvel.sampledata.sampleHeroes
 import io.kotlintest.Description
 import io.kotlintest.assertions.arrow.either.shouldBeRight
@@ -25,8 +21,8 @@ internal class HeroesRepositoryImplTest : StringSpec() {
 	override fun beforeTest(description: Description) = clearAllMocks()
 
 	init {
-		val heroesRemoteSource = mockk<HeroesDataSource<HKImplementation>>()
-		val heroesCacheSource = mockk<HeroesDataSource<HKImplementation>>()
+		val heroesRemoteSource = mockk<HeroesDataSource<ForDeferredK>>()
+		val heroesCacheSource = mockk<HeroesDataSource<ForDeferredK>>()
 		val heroesRepository =
 			HeroesRepositoryImpl(
 				DeferredK.monadDefer(),
@@ -138,21 +134,21 @@ internal class HeroesRepositoryImplTest : StringSpec() {
 		}
 	}
 
-	private fun HeroesDataSource<HKImplementation>.stubHeroes(heroes: Heroes) {
+	private fun HeroesDataSource<*>.stubHeroes(heroes: Heroes) {
 		every { getHeroes() } returns DeferredK.just(heroes)
 	}
 
-	private fun HeroesDataSource<HKImplementation>.stubSave() {
+	private fun HeroesDataSource<*>.stubSave() {
 		every { saveHero(any()) } returns DeferredK.just(Unit)
 		every { saveHeroes(any()) } returns DeferredK.just(Unit)
 	}
 
-	private fun HeroesDataSource<HKImplementation>.stubSaveThrow(t: Throwable) {
+	private fun HeroesDataSource<*>.stubSaveThrow(t: Throwable) {
 		every { saveHero(any()) } returns DeferredK.raiseError(t)
 		every { saveHeroes(any()) } returns DeferredK.raiseError(t)
 	}
 
-	private fun HeroesDataSource<HKImplementation>.stubThrow(t: Throwable) {
+	private fun HeroesDataSource<*>.stubThrow(t: Throwable) {
 		every { getHeroes() } returns DeferredK.raiseError(t)
 	}
 }

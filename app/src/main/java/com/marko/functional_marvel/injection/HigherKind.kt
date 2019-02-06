@@ -1,5 +1,5 @@
 package com.marko.functional_marvel.injection
 
-import arrow.effects.ForDeferredK
+import arrow.effects.ForObservableK
 
-typealias HKImplementation = ForDeferredK
+typealias HKImplementation = ForObservableK

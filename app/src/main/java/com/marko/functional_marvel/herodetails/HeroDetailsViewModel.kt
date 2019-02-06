@@ -22,7 +22,9 @@ class HeroDetailsViewModel @Inject constructor(
 	val error: LiveData<Throwable>
 		get() = _error
 
-	fun fetch() = fetchComics().unsafeRunAsync {
-		it.fold(_error::postValue, _comics::postValue)
-	}
+	fun fetch() {}
+
+//	fun fetch() = fetchComics().unsafeRunAsync {
+//		it.fold(_error::postValue, _comics::postValue)
+//	}
 }

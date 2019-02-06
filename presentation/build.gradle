@@ -1,0 +1,66 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+
+    //Arrow
+    implementation "io.arrow-kt:arrow-core:$arrowVersion"
+    implementation "io.arrow-kt:arrow-syntax:$arrowVersion"
+    implementation "io.arrow-kt:arrow-typeclasses:$arrowVersion"
+    implementation "io.arrow-kt:arrow-data:$arrowVersion"
+    implementation "io.arrow-kt:arrow-instances-core:$arrowVersion"
+    implementation "io.arrow-kt:arrow-instances-data:$arrowVersion"
+    implementation "io.arrow-kt:arrow-free:$arrowVersion"
+    implementation "io.arrow-kt:arrow-instances-free:$arrowVersion"
+    implementation "io.arrow-kt:arrow-effects:$arrowVersion"
+    implementation "io.arrow-kt:arrow-effects-instances:$arrowVersion"
+    implementation "io.arrow-kt:arrow-effects-rx2:$arrowVersion"
+    implementation "io.arrow-kt:arrow-effects-rx2-instances:$arrowVersion"
+    implementation "io.arrow-kt:arrow-effects-kotlinx-coroutines:$arrowVersion"
+    implementation "io.arrow-kt:arrow-effects-kotlinx-coroutines-instances:$arrowVersion"
+    implementation "io.arrow-kt:arrow-optics:$arrowVersion"
+    implementation "io.arrow-kt:arrow-generic:$arrowVersion"
+    implementation "io.arrow-kt:arrow-optics:$arrowVersion"
+
+    // Dagger
+    implementation "com.google.dagger:dagger:$daggerVersion"
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
+
+    // Timber
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+
+    implementation project(path: ":domain")
+
+    // Testing
+    testImplementation "androidx.arch.core:core-testing:$lifecycleVersion"
+    testImplementation "io.kotlintest:kotlintest-assertions-arrow:$kotlinTestVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$jUnit5Version"
+    testImplementation "io.mockk:mockk:$mockkVersion"
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+}

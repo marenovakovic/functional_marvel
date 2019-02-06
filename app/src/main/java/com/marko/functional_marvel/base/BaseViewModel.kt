@@ -1,11 +1,11 @@
 package com.marko.functional_marvel.base
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 
-private val exceptionHandler = CoroutineExceptionHandler { _, t -> t.printStackTrace() }
-
-abstract class BaseViewModel : ViewModel(), CoroutineScope by MainScope() + exceptionHandler {
+abstract class BaseViewModel : ViewModel(), CoroutineScope by MainScope() {
 
 	override fun onCleared() {
 		super.onCleared()

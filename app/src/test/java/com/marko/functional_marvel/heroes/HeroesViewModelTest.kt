@@ -2,7 +2,7 @@ package com.marko.functional_marvel.heroes
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import arrow.effects.DeferredK
+import arrow.effects.ObservableK
 import com.marko.functional_marvel.domain.heroes.HeroesRepository
 import com.marko.functional_marvel.entities.Heroes
 import com.marko.functional_marvel.injection.HKImplementation
@@ -24,8 +24,7 @@ class HeroesViewModelTest {
 	private val heroesRepository = mockk<HeroesRepository<HKImplementation>>()
 	private val fetchHeroes = FetchHeroes(heroesRepository)
 	private val setFavorite = SetFavorite(heroesRepository)
-	private val viewModel =
-		HeroesViewModel(fetchHeroes, setFavorite)
+	private val viewModel = HeroesViewModel(fetchHeroes, setFavorite)
 
 	@Test
 	fun `test does fetch heroes exposes right result on success and does it calls use case`() {
@@ -64,11 +63,11 @@ class HeroesViewModelTest {
 	}
 
 	private fun HeroesRepository<HKImplementation>.stubHeroes(heroes: Heroes) {
-		every { getHeroes() } returns DeferredK.just(heroes)
+		every { getHeroes() } returns ObservableK.just(heroes)
 	}
 
 	private fun HeroesRepository<HKImplementation>.stubThrow(t: Throwable) {
-		every { getHeroes() } returns DeferredK.raiseError(t)
+		every { getHeroes() } returns ObservableK.raiseError(t)
 	}
 
 	private inline fun <reified A : Any> stubObserver(): Observer<A> = mockk<Observer<A>>().apply {

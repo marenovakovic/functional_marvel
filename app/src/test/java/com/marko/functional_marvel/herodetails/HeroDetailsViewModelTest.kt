@@ -2,7 +2,7 @@ package com.marko.functional_marvel.herodetails
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import arrow.effects.DeferredK
+import arrow.effects.ObservableK
 import com.marko.functional_marvel.entities.Comics
 import com.marko.functional_marvel.injection.HKImplementation
 import com.marko.functional_marvel.sampledata.sampleComics
@@ -39,7 +39,7 @@ class HeroDetailsViewModelTest {
 	}
 
 	private fun FetchComics<*>.stubComics(comics: Comics) {
-		every { execute(Unit) } returns DeferredK.just(comics)
+		every { execute(Unit) } returns ObservableK.just(comics)
 	}
 
 	private inline fun <reified A : Any> stubObserver(): Observer<A> = mockk<Observer<A>>().apply {

@@ -15,6 +15,9 @@ import com.marko.functional_marvel.injection.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_heroes.*
 import javax.inject.Inject
 
+/**
+ * [BaseFragment] displaying [Heroes] list
+ */
 class HeroesFragment : BaseFragment() {
 
 	@Inject
@@ -33,6 +36,7 @@ class HeroesFragment : BaseFragment() {
 
 		viewModel.fetch()
 		viewModel.heroes.observe(this, Observer { heroesAdapter.heroes = it })
+		viewModel.error.observe(this, Observer { it.printStackTrace() })
 	}
 
 	override fun onCreateView(
@@ -55,5 +59,5 @@ class HeroesFragment : BaseFragment() {
 		findNavController().navigate(action)
 	}
 
-	private fun setFavorite(hero: Hero) = viewModel.saveHero(hero)
+	private fun setFavorite(hero: Hero) {}
 }

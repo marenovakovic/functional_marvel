@@ -28,26 +28,10 @@ class HeroesRepositoryImpl<F> @Inject constructor(
 	@Named(DI.HEROES_CACHE_SOURCE) private val heroesCacheSource: HeroesDataSource<F>
 ) : HeroesRepository<F>, MonadDefer<F> by monadDefer {
 
-	override fun getHeroes(): Kind<F, Heroes> =
-		defer {
-			tupled(
-				heroesRemoteSource.getHeroes(),
-				heroesCacheSource.getHeroes()
-			).map { (fetched, cached) ->
-				val heroes = fetched.toMutableList()
-
-				fetched.forEachIndexed { index, fetchedHero ->
-					cached.forEach { cachedHero ->
-						if (fetchedHero.id == cachedHero.id) {
-							heroes[index] = fetchedHero.copy(isFavorite = true)
-						}
-					}
-				}
-
-				heroes
-			}
-				.handleErrorWith { raiseError(ContentNotAvailable) }
-		}
+	override fun getHeroes(): Kind<F, Heroes> = defer {
+		heroesRemoteSource.getHeroes()
+			.handleErrorWith { raiseError(ContentNotAvailable) }
+	}
 
 	override fun saveHero(hero: Hero): Kind<F, Unit> =
 		defer { heroesCacheSource.saveHero(hero) }

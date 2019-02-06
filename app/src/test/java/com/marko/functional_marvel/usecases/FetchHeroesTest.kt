@@ -1,14 +1,12 @@
 package com.marko.functional_marvel.usecases
 
-import arrow.effects.DeferredK
-import arrow.effects.unsafeRunAsync
+import arrow.effects.ObservableK
+import arrow.effects.value
 import com.marko.functional_marvel.domain.heroes.HeroesRepository
 import com.marko.functional_marvel.entities.Heroes
 import com.marko.functional_marvel.injection.HKImplementation
 import com.marko.functional_marvel.sampledata.sampleHeroes
 import io.kotlintest.Description
-import io.kotlintest.assertions.arrow.either.shouldBeLeft
-import io.kotlintest.assertions.arrow.either.shouldBeRight
 import io.kotlintest.specs.StringSpec
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -30,28 +28,30 @@ internal class FetchHeroesTest : StringSpec() {
 			val stubHeroes = sampleHeroes
 			heroesRepository.stubHeroes(stubHeroes)
 
-			fetchHeroes().unsafeRunAsync {
-				verify(exactly = 1) { heroesRepository.getHeroes() }
-				it.shouldBeRight(stubHeroes)
-			}
+			fetchHeroes().value().test()
+				.assertComplete()
+				.assertValue(stubHeroes)
+
+			verify(exactly = 1) { heroesRepository.getHeroes() }
 		}
 
 		"check result when something goes wrong" {
 			val t = Throwable("jeb' se")
 			heroesRepository.stubThrow(t)
 
-			fetchHeroes().unsafeRunAsync {
-				verify(exactly = 1) { heroesRepository.getHeroes() }
-				it.shouldBeLeft(t)
-			}
+			fetchHeroes().value().test()
+				.assertNotComplete()
+				.assertError(t)
+
+			verify(exactly = 1) { heroesRepository.getHeroes() }
 		}
 	}
 
 	private fun HeroesRepository<HKImplementation>.stubHeroes(heroes: Heroes) {
-		every { getHeroes() } returns DeferredK.just(heroes)
+		every { getHeroes() } returns ObservableK.just(heroes)
 	}
 
 	private fun HeroesRepository<HKImplementation>.stubThrow(throwable: Throwable) {
-		every { getHeroes() } returns DeferredK.raiseError(throwable)
+		every { getHeroes() } returns ObservableK.raiseError(throwable)
 	}
 }

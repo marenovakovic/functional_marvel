@@ -11,6 +11,9 @@ import com.marko.functional_marvel.mappers.toCache
 import com.marko.functional_marvel.mappers.toHero
 import com.marko.functional_marvel.mappers.toHeroes
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * [Heroes] database access point. Implements [Async] by delegating
@@ -25,6 +28,12 @@ class HeroesCacheSource<F> @Inject constructor(
 	private val async: Async<F>,
 	private val heroesDao: HeroesDao
 ) : HeroesDataSource<F>, Async<F> by async {
+
+	private suspend fun a() = suspendCoroutine<Heroes> { continuation ->
+		Try { heroesDao.queryAllHeroes() }
+			.map { it.toHeroes() }
+			.fold(continuation::resumeWithException, continuation::resume)
+	}
 
 	override fun saveHero(hero: Hero): Kind<F, Unit> =
 		async { callback ->
