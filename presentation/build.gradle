@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 28
@@ -18,28 +19,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    testOptions.unitTests.returnDefaultValues = true
 }
 
 dependencies {
 
     //Arrow
-    implementation "io.arrow-kt:arrow-core:$arrowVersion"
-    implementation "io.arrow-kt:arrow-syntax:$arrowVersion"
-    implementation "io.arrow-kt:arrow-typeclasses:$arrowVersion"
-    implementation "io.arrow-kt:arrow-data:$arrowVersion"
-    implementation "io.arrow-kt:arrow-instances-core:$arrowVersion"
-    implementation "io.arrow-kt:arrow-instances-data:$arrowVersion"
-    implementation "io.arrow-kt:arrow-free:$arrowVersion"
-    implementation "io.arrow-kt:arrow-instances-free:$arrowVersion"
     implementation "io.arrow-kt:arrow-effects:$arrowVersion"
-    implementation "io.arrow-kt:arrow-effects-instances:$arrowVersion"
-    implementation "io.arrow-kt:arrow-effects-rx2:$arrowVersion"
-    implementation "io.arrow-kt:arrow-effects-rx2-instances:$arrowVersion"
-    implementation "io.arrow-kt:arrow-effects-kotlinx-coroutines:$arrowVersion"
-    implementation "io.arrow-kt:arrow-effects-kotlinx-coroutines-instances:$arrowVersion"
-    implementation "io.arrow-kt:arrow-optics:$arrowVersion"
-    implementation "io.arrow-kt:arrow-generic:$arrowVersion"
-    implementation "io.arrow-kt:arrow-optics:$arrowVersion"
+    implementation "io.arrow-kt:arrow-effects-data:$arrowVersion"
+    implementation "io.arrow-kt:arrow-effects-extensions:$arrowVersion"
+    implementation "io.arrow-kt:arrow-effects-io-extensions:$arrowVersion"
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
@@ -60,6 +50,7 @@ dependencies {
     // Testing
     testImplementation "androidx.arch.core:core-testing:$lifecycleVersion"
     testImplementation "io.kotlintest:kotlintest-assertions-arrow:$kotlinTestVersion"
+    testImplementation "junit:junit:$jUnitVersion"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$jUnit5Version"
     testImplementation "io.mockk:mockk:$mockkVersion"
     testImplementation "org.assertj:assertj-core:$assertjVersion"

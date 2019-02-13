@@ -13,7 +13,7 @@ buildscript {
         androidGradlePluginVersion = '3.2.1'
         appCompatVersion = '1.0.2'
         archCoreTestingVersion = '2.0.0'
-        arrowVersion = '0.8.2'
+        arrowVersion = '0.9.0-SNAPSHOT'
         assertjVersion = '3.8.0'
         annotationsVersion = '28.0.0'
         constraintLayoutVersion = '2.0.0-alpha2'
@@ -64,7 +64,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.android.tools.build:gradle:3.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
         // NOTE: Do not place your application dependencies here; they belong
@@ -77,6 +77,7 @@ allprojects {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
+        maven { url "http://oss.jfrog.org/artifactory/oss-snapshot-local/" }
     }
 }
 

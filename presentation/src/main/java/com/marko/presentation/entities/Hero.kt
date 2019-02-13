@@ -2,7 +2,7 @@ package com.marko.presentation.entities
 
 import com.marko.domain.entities.*
 
-data class HeroPresentation(
+data class Hero(
 	val id: String,
 	val name: String,
 	val description: String,

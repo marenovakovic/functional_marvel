@@ -8,10 +8,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.marko.domain.entities.HeroId
 import com.marko.functional_marvel.R
 import com.marko.functional_marvel.base.BaseFragment
-import com.marko.functional_marvel.entities.Hero
+import com.marko.functional_marvel.extensions.beVisibleIf
 import com.marko.functional_marvel.injection.viewmodel.ViewModelFactory
+import com.marko.presentation.entities.Hero
+import com.marko.presentation.heroes.HeroesViewModel
 import kotlinx.android.synthetic.main.fragment_heroes.*
 import javax.inject.Inject
 
@@ -35,6 +38,7 @@ class HeroesFragment : BaseFragment() {
 		super.onCreate(savedInstanceState)
 
 		viewModel.fetch()
+		viewModel.loading.observe(this, Observer { heroesProgressBar.beVisibleIf(it) })
 		viewModel.heroes.observe(this, Observer { heroesAdapter.heroes = it })
 		viewModel.error.observe(this, Observer { it.printStackTrace() })
 	}
@@ -54,8 +58,8 @@ class HeroesFragment : BaseFragment() {
 		}
 	}
 
-	private fun showHeroDetails(hero: Hero) {
-		val action = HeroesFragmentDirections.actionHeroesFragmentToHeroDetailsFragment(hero)
+	private fun showHeroDetails(heroId: HeroId) {
+		val action = HeroesFragmentDirections.actionHeroesFragmentToHeroDetailsFragment(heroId)
 		findNavController().navigate(action)
 	}
 

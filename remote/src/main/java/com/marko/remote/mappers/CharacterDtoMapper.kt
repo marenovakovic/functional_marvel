@@ -12,7 +12,7 @@ fun CharacterDto.toData(): HeroData = HeroData(
 	modified = modified,
 	resourceUri = resourceUri,
 	urls = urls.toUrl(),
-	thumbnail = MarvelImage(),
+	thumbnail = MarvelImage(path = thumbnail.path, extension = thumbnail.extension),
 	comics = MarvelResources(),
 	stories = MarvelResources(),
 	events = MarvelResources(),

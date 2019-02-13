@@ -5,17 +5,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.karumi.marvelapiclient.model.MarvelImage
+import com.marko.domain.entities.HeroId
 import com.marko.functional_marvel.R
-import com.marko.functional_marvel.entities.Hero
-import com.marko.functional_marvel.entities.Heroes
 import com.marko.functional_marvel.extensions.anim
 import com.marko.functional_marvel.extensions.inflate
 import com.marko.functional_marvel.extensions.loadHero
+import com.marko.presentation.entities.Hero
+import com.marko.presentation.entities.Heroes
 import kotlinx.android.synthetic.main.list_item_hero.view.*
 
 class HeroesAdapter(
-	private val onClick: (hero: Hero) -> Unit,
+	private val onClick: (heroId: HeroId) -> Unit,
 	private val onFavoriteClick: (hero: Hero) -> Unit
 ) : ListAdapter<Hero, HeroesAdapter.HeroHolder>(HeroesDiffer) {
 
@@ -41,17 +41,19 @@ class HeroesAdapter(
 		private val description = itemView.listItemHeroDescription
 
 		fun bind(hero: Hero) {
-			portrait.setOnClickListener { onClick(hero) }
+			var isFavorite = hero.isFavorite
+
+			portrait.setOnClickListener { onClick(hero.id) }
 
 			favoriteButton.anim(hero.isFavorite)
 
 			favoriteButton.setOnClickListener {
-				favoriteButton.anim(! hero.isFavorite)
-				onFavoriteClick(hero.copy(isFavorite = ! hero.isFavorite))
-				submitList(heroes.map { if (it.id == hero.id) hero.copy(isFavorite = ! hero.isFavorite) else it })
+				isFavorite = ! isFavorite
+				favoriteButton.anim(isFavorite)
+				onFavoriteClick(hero.copy(isFavorite = isFavorite))
 			}
 
-			portrait.loadHero(hero.thumbnail.getImageUrl(MarvelImage.Size.PORTRAIT_MEDIUM))
+			portrait.loadHero(hero.thumbnail.imageUrl)
 
 			name.text = hero.name
 

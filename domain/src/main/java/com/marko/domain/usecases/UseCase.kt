@@ -1,6 +1,7 @@
 package com.marko.domain.usecases
 
 import arrow.core.Either
+import arrow.effects.IO
 
 /**
  * Implement this to execute business logic
@@ -15,9 +16,9 @@ abstract class UseCase<in P, out R> {
 	 *
 	 * @param parameters [P] parameters needed for execution
 	 *
-	 * @return [Either] containing either result of executed business logic [R] or [Throwable] if something goes wrong
+	 * @return [IO] with [Either] containing either result of executed business logic [R] or [Throwable] if something goes wrong
 	 */
-	abstract suspend fun execute(parameters: P): Either<Throwable, R>
+	abstract fun execute(parameters: P): IO<Either<Throwable, R>>
 }
 
 /**
@@ -25,6 +26,6 @@ abstract class UseCase<in P, out R> {
  *
  * [R] result of business logic execution
  *
- * @return [Either] containing either result of executed business logic [R] or [Throwable] if something goes wrong
+ * @return [IO] with [Either] containing either result of executed business logic [R] or [Throwable] if something goes wrong
  */
-suspend operator fun <R> UseCase<Unit, R>.invoke() = this.execute(Unit)
+operator fun <R> UseCase<Unit, R>.invoke(): IO<Either<Throwable, R>> = this.execute(Unit)

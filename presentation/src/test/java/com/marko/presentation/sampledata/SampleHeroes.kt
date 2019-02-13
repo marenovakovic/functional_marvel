@@ -1,8 +1,8 @@
-package com.marko.data.sampledata
+package com.marko.presentation.sampledata
 
-import com.marko.data.entities.HeroData
-import com.marko.data.entities.HeroesData
 import com.marko.domain.entities.*
+import com.marko.presentation.entities.Hero
+import com.marko.presentation.entities.Heroes
 
 fun heroEntity(
 	id: String = "id",
@@ -30,7 +30,7 @@ fun heroEntity(
 	stories = stories
 )
 
-fun heroData(
+fun hero(
 	id: String = "id",
 	name: String = "name",
 	description: String = "description",
@@ -42,7 +42,7 @@ fun heroData(
 	stories: MarvelResources<StoryResource> = MarvelResources(),
 	events: MarvelResources<EventResource> = MarvelResources(),
 	series: MarvelResources<SeriesResource> = MarvelResources()
-): HeroData = HeroData(
+): Hero = Hero(
 	id = id,
 	name = name,
 	description = description,
@@ -63,9 +63,9 @@ val heroesEntity: HeroesEntity
 		heroEntity()
 	)
 
-val heroesData: HeroesData
+val heroes: Heroes
 	get() = listOf(
-		heroData(),
-		heroData(),
-		heroData()
+		hero(),
+		hero(),
+		hero()
 	)

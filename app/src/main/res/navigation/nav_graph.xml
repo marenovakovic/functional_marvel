@@ -21,7 +21,7 @@
         android:label="fragment_hero_details"
         tools:layout="@layout/fragment_hero_details">
         <argument
-            android:name="hero"
-            app:argType="com.marko.functional_marvel.entities.Hero"/>
+            android:name="heroId"
+            app:argType="string"/>
     </fragment>
 </navigation>

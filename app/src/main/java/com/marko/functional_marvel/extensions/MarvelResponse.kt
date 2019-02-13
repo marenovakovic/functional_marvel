@@ -4,10 +4,10 @@ import arrow.core.Failure
 import arrow.core.Success
 import arrow.core.Try
 import com.karumi.marvelapiclient.model.MarvelResponse
-import com.marko.functional_marvel.exceptions.MarvelException
-import com.marko.functional_marvel.exceptions.NotFound
-import com.marko.functional_marvel.exceptions.UnauthorizedAccess
-import com.marko.functional_marvel.exceptions.UnknownMarvelError
+import com.marko.domain.exceptions.MarvelException
+import com.marko.domain.exceptions.NotFound
+import com.marko.domain.exceptions.UnauthorizedAccess
+import com.marko.domain.exceptions.UnknownMarvelError
 
 val <A> MarvelResponse<A>.safe: Try<A>
 	get() = when (code) {

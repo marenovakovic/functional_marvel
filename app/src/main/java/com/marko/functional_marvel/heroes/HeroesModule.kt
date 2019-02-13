@@ -2,17 +2,16 @@ package com.marko.functional_marvel.heroes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.marko.functional_marvel.cache.HeroesCacheSource
-import com.marko.functional_marvel.cache.HeroesDao
-import com.marko.functional_marvel.cache.MarvelDatabase
-import com.marko.functional_marvel.data.heroes.HeroesDataSource
-import com.marko.functional_marvel.data.heroes.HeroesRepositoryImpl
-import com.marko.functional_marvel.domain.heroes.HeroesRepository
-import com.marko.functional_marvel.injection.DI
-import com.marko.functional_marvel.injection.HKImplementation
+import com.marko.cache.database.MarvelDatabase
+import com.marko.cache.heroes.HeroesCacheRepositoryImpl
+import com.marko.cache.heroes.HeroesDao
+import com.marko.data.heroes.*
+import com.marko.data.injection.DI
+import com.marko.domain.heroes.HeroesRepository
 import com.marko.functional_marvel.injection.viewmodel.ViewModelFactory
 import com.marko.functional_marvel.injection.viewmodel.ViewModelKey
-import com.marko.functional_marvel.remote.heroes.HeroesRemoteSource
+import com.marko.presentation.heroes.HeroesViewModel
+import com.marko.remote.heroes.HeroesRemoteRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -23,15 +22,21 @@ import javax.inject.Named
 abstract class HeroesBindingModule {
 
 	@Binds
-	@Named(DI.HEROES_REMOTE_SOURCE)
-	abstract fun heroRemoteSource(bind: HeroesRemoteSource<HKImplementation>): HeroesDataSource<HKImplementation>
+	abstract fun heroesRemoteRepository(bind: HeroesRemoteRepositoryImpl): HeroesRemoteRepository
 
 	@Binds
-	@Named(DI.HEROES_CACHE_SOURCE)
-	abstract fun heroesCacheSource(bind: HeroesCacheSource<HKImplementation>): HeroesDataSource<HKImplementation>
+	abstract fun heroesCacheRepository(bind: HeroesCacheRepositoryImpl): HeroesCacheRepository
 
 	@Binds
-	abstract fun heroesRepository(bind: HeroesRepositoryImpl<HKImplementation>): HeroesRepository<HKImplementation>
+	@Named(DI.REMOTE_SOURCE)
+	abstract fun heroRemoteSource(bind: HeroesRemoteSource): HeroesDataSource
+
+	@Binds
+	@Named(DI.CACHE_SOURCE)
+	abstract fun heroesCacheSource(bind: HeroesCacheSource): HeroesDataSource
+
+	@Binds
+	abstract fun heroesRepository(bind: HeroesRepositoryImpl): HeroesRepository
 
 	@Binds
 	@IntoMap

@@ -2,6 +2,7 @@ package com.marko.domain.usecases
 
 import arrow.core.Left
 import arrow.core.Right
+import arrow.effects.IO
 import com.marko.domain.entities.HeroesEntity
 import com.marko.domain.heroes.HeroesRepository
 import com.marko.domain.sampledata.sampleHeroes
@@ -23,7 +24,7 @@ internal class FetchHeroesTest {
 		val stubHeroes = sampleHeroes
 		heroesRepository.stubHeroes(stubHeroes)
 
-		val result = fetchHeroes()
+		val result = fetchHeroes().unsafeRunSync()
 
 		result.shouldBeRight(stubHeroes)
 		coVerify(exactly = 1) { heroesRepository.getHeroes() }
@@ -34,17 +35,17 @@ internal class FetchHeroesTest {
 		val t = Throwable("dalje neces moci")
 		heroesRepository.stubThrow(t)
 
-		val result = fetchHeroes()
+		val result = fetchHeroes().unsafeRunSync()
 
 		result.shouldBeLeft(t)
 		coVerify(exactly = 1) { heroesRepository.getHeroes() }
 	}
 
 	private fun HeroesRepository.stubHeroes(heroes: HeroesEntity) {
-		coEvery { getHeroes() } returns Right(heroes)
+		coEvery { getHeroes() } returns IO.just(Right(heroes))
 	}
 
 	private fun HeroesRepository.stubThrow(t: Throwable) {
-		coEvery { getHeroes() } returns Left(t)
+		coEvery { getHeroes() } returns IO.just(Left(t))
 	}
 }

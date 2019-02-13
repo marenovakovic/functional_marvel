@@ -14,6 +14,12 @@
         tools:listitem="@layout/list_item_hero"
         tools:spanCount="3"/>
 
-
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/heroesProgressBar"
+        style="@style/Base.Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
 </FrameLayout>

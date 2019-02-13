@@ -1,4 +1,4 @@
-package com.marko.functional_marvel.base
+package com.marko.presentation.base
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope

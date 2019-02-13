@@ -7,11 +7,13 @@ import com.marko.domain.entities.HeroId
 
 interface HeroesDataSource {
 
-	suspend fun saveHero(heroData: HeroData): Either<Throwable, Unit>
-
-	suspend fun saveHeroes(heroesData: HeroesData): Either<Throwable, Unit>
-
 	suspend fun getHeroes(): Either<Throwable, HeroesData>
 
 	suspend fun getHero(heroId: HeroId): Either<Throwable, HeroData>
+
+	suspend fun getFavorites(): Either<Throwable, HeroesData>
+
+	suspend fun saveHero(heroData: HeroData): Either<Throwable, Unit>
+
+	suspend fun saveHeroes(heroesData: HeroesData): Either<Throwable, Unit>
 }

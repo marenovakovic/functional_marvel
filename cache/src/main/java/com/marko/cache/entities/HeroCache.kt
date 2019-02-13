@@ -16,7 +16,7 @@ data class HeroCache(
 	@Ignore var modified: String = "",
 	@Ignore var resourceUri: String = "",
 	@Ignore var urls: List<MarvelUrl> = listOf(),
-	@Ignore var thumbnail: MarvelImage = MarvelImage(),
+	@Ignore var thumbnail: MarvelImage = MarvelImage(path = "", extension = ""),
 	@Ignore var comics: MarvelResources<ComicResource> = MarvelResources(),
 	@Ignore var stories: MarvelResources<StoryResource> = MarvelResources(),
 	@Ignore var events: MarvelResources<EventResource> = MarvelResources(),

@@ -17,3 +17,6 @@ object NotFound : MarvelException()
 object ContentNotAvailable : MarvelException()
 
 class UnknownMarvelError(message: String) : MarvelException(message = Some(message))
+
+val Throwable.marvelException: MarvelException
+	get() = this as? MarvelException ?: UnknownMarvelError(message = message ?: "")

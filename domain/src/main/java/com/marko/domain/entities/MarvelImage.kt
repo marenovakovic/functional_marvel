@@ -1,3 +1,7 @@
 package com.marko.domain.entities
 
-class MarvelImage
+data class MarvelImage(
+	val path: String,
+	val extension: String,
+	val imageUrl: String = "$path/standard_medium.$extension"
+)

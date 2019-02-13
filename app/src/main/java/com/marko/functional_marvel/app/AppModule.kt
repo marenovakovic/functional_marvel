@@ -1,25 +1,31 @@
 package com.marko.functional_marvel.app
 
 import android.content.Context
-import arrow.effects.ObservableK
-import arrow.effects.observablek.async.async
-import arrow.effects.observablek.monadDefer.monadDefer
-import arrow.effects.typeclasses.Async
-import arrow.effects.typeclasses.MonadDefer
 import com.karumi.marvelapiclient.CharacterApiClient
 import com.karumi.marvelapiclient.ComicApiClient
 import com.karumi.marvelapiclient.MarvelApiConfig
-import com.marko.functional_marvel.cache.MarvelDatabase
-import com.marko.functional_marvel.injection.HKImplementation
+import com.marko.cache.database.MarvelDatabase
+import com.marko.domain.dispatchers.CoroutineDispatchers
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
+import kotlin.coroutines.CoroutineContext
 
 @Module
 class AppModule(private val context: Context) {
 
 	@Provides
 	fun context(): Context = context
+
+	@Singleton
+	@Provides
+	fun dispatchers(): CoroutineDispatchers = object : CoroutineDispatchers {
+		override val main: CoroutineContext
+			get() = Dispatchers.Main
+		override val io: CoroutineContext
+			get() = Dispatchers.IO
+	}
 
 	@Singleton
 	@Provides
@@ -40,12 +46,4 @@ class AppModule(private val context: Context) {
 	@Singleton
 	@Provides
 	fun marvelDatabase(context: Context): MarvelDatabase = MarvelDatabase.getInstance(context)
-
-	@Singleton
-	@Provides
-	fun async(): Async<HKImplementation> = ObservableK.async()
-
-	@Singleton
-	@Provides
-	fun monadDefer(): MonadDefer<HKImplementation> = ObservableK.monadDefer()
 }

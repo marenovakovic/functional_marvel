@@ -9,7 +9,7 @@ fun hero(
 	modified: String = "modified",
 	resourceUri: String = "resourceUri",
 	urls: List<MarvelUrl> = listOf(),
-	thumbnail: MarvelImage = MarvelImage(),
+	thumbnail: MarvelImage = MarvelImage(path = "", extension = ""),
 	comics: MarvelResources<ComicResource> = MarvelResources(),
 	stories: MarvelResources<StoryResource> = MarvelResources(),
 	events: MarvelResources<EventResource> = MarvelResources(),
