@@ -1,8 +1,6 @@
 package com.marko.data.heroes
 
 import arrow.core.Either
-import arrow.core.Right
-import arrow.core.flatMap
 import arrow.core.getOrElse
 import arrow.effects.IO
 import arrow.effects.extensions.io.fx.fx
@@ -24,8 +22,8 @@ import javax.inject.Named
  * @param heroesCacheSource [HeroesDataSource] database access point
  */
 class HeroesRepositoryImpl @Inject constructor(
-	@Named(DI.REMOTE_SOURCE) private val heroesRemoteSource: HeroesDataSource,
-	@Named(DI.CACHE_SOURCE) private val heroesCacheSource: HeroesDataSource
+	@Named(DI.HEROES_REMOTE_SOURCE) private val heroesRemoteSource: HeroesDataSource,
+	@Named(DI.HEROES_CACHE_SOURCE) private val heroesCacheSource: HeroesDataSource
 ) : HeroesRepository {
 
 	override fun getHeroes(): IO<Either<Throwable, HeroesEntity>> = fx {
@@ -61,17 +59,15 @@ class HeroesRepositoryImpl @Inject constructor(
 //			.map { it.toEntity() }
 //	}
 
-	override suspend fun getHero(heroId: HeroId): Either<Throwable, HeroEntity> =
-		heroesCacheSource.getHero(heroId = heroId)
-			.let { cachedResult ->
-				if (cachedResult.isLeft()) heroesRemoteSource.getHero(heroId = heroId)
-				else cachedResult
-			}
-			.flatMap {
-				if (it.id.isBlank()) heroesRemoteSource.getHero(heroId = heroId)
-				else Right(it)
-			}
-			.map { it.toEntity() }
+	override fun getHero(heroId: HeroId): IO<Either<Throwable, HeroEntity>> = fx {
+		val cachedHero = ! effect { heroesCacheSource.getHero(heroId = heroId) }
+			.handleErrorWith { effect { heroesRemoteSource.getHero(heroId = heroId) } }
+
+		if (! cachedHero.exists { hero -> hero.id.isNotBlank() })
+			! effect { heroesRemoteSource.getHero(heroId = heroId) }
+		else cachedHero
+	}
+		.map { result -> result.map { hero -> hero.toEntity() } }
 
 	override suspend fun getFavorites(): Either<Throwable, HeroesEntity> =
 		heroesCacheSource.getFavorites().map { it.toEntity() }

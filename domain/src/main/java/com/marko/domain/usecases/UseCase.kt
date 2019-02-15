@@ -22,6 +22,18 @@ abstract class UseCase<in P, out R> {
 }
 
 /**
+ * Execute use case that takes arguments
+ *
+ * [T] parameters need for use case execution
+ * [R] result of business logic execution
+ *
+ * @param parameters [T] parameters needed for use case execution
+ *
+ * @return [IO] with [Either] containing either result of executed business logic [R] or [Throwable] if something goes wrong
+ */
+operator fun <T, R> UseCase<T, R>.invoke(parameters: T): IO<Either<Throwable, R>> = this.execute(parameters)
+
+/**
  * Execute use case that takes no arguments
  *
  * [R] result of business logic execution

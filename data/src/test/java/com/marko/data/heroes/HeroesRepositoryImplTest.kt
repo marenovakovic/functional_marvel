@@ -10,8 +10,8 @@ import com.marko.data.sampledata.heroData
 import com.marko.data.sampledata.heroEntity
 import com.marko.data.sampledata.heroesData
 import com.marko.data.sampledata.heroesEntity
-import io.kotlintest.assertions.arrow.either.shouldBeLeft
-import io.kotlintest.assertions.arrow.either.shouldBeRight
+import com.marko.data.arrow.shouldBeLeft
+import com.marko.data.arrow.shouldBeRight
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -38,7 +38,7 @@ internal class HeroesRepositoryImplTest {
 
 			val result = heroesRepository.getHeroes().unsafeRunSync()
 
-			result.shouldBeRight(heroes.toEntity())
+			result shouldBeRight heroes.toEntity()
 			coVerify(exactly = 1) { heroesCacheSource.getHeroes() }
 			coVerify(exactly = 1) { heroesRemoteSource.getHeroes() }
 		}
@@ -50,9 +50,9 @@ internal class HeroesRepositoryImplTest {
 
 		heroesCacheSource.stubHero(heroData)
 
-		val result = heroesRepository.getHero(heroId = heroId)
+		val result = heroesRepository.getHero(heroId = heroId).unsafeRunSync()
 
-		result.shouldBeRight(heroData.toEntity())
+		result shouldBeRight heroData.toEntity()
 		coVerify(exactly = 1) { heroesCacheSource.getHero(heroId = heroId) }
 		coVerify(exactly = 0) { heroesRemoteSource.getHero(heroId = heroId) }
 	}
@@ -67,9 +67,9 @@ internal class HeroesRepositoryImplTest {
 			heroesCacheSource.stubThrow(t)
 			heroesRemoteSource.stubHero(remoteHero)
 
-			val result = heroesRepository.getHero(heroId = heroId)
+			val result = heroesRepository.getHero(heroId = heroId).unsafeRunSync()
 
-			result.shouldBeRight(remoteHero.toEntity())
+			result shouldBeRight remoteHero.toEntity()
 			coVerify(exactly = 1) { heroesCacheSource.getHero(heroId = heroId) }
 			coVerify(exactly = 1) { heroesRemoteSource.getHero(heroId = heroId) }
 		}
@@ -84,9 +84,9 @@ internal class HeroesRepositoryImplTest {
 			heroesCacheSource.stubHero(cacheHero)
 			heroesRemoteSource.stubHero(remoteHero)
 
-			val result = heroesRepository.getHero(heroId = heroId)
+			val result = heroesRepository.getHero(heroId = heroId).unsafeRunSync()
 
-			result.shouldBeRight(remoteHero.toEntity())
+			result shouldBeRight remoteHero.toEntity()
 			coVerify(exactly = 1) { heroesCacheSource.getHero(heroId = heroId) }
 			coVerify(exactly = 1) { heroesRemoteSource.getHero(heroId = heroId) }
 		}
@@ -98,7 +98,7 @@ internal class HeroesRepositoryImplTest {
 
 		val result = heroesRepository.getHeroes().unsafeRunSync()
 
-		result.shouldBeRight(stubHeroes.toEntity())
+		result shouldBeRight stubHeroes.toEntity()
 		coVerify(exactly = 1) { heroesCacheSource.getHeroes() }
 	}
 
@@ -112,7 +112,7 @@ internal class HeroesRepositoryImplTest {
 
 		val result = heroesRepository.getHeroes().unsafeRunSync()
 
-		result.shouldBeRight(remoteHeroes.toEntity())
+		result shouldBeRight remoteHeroes.toEntity()
 		coVerify(exactly = 1) { heroesRemoteSource.getHeroes() }
 		coVerify(exactly = 1) { heroesCacheSource.getHeroes() }
 	}
@@ -125,7 +125,7 @@ internal class HeroesRepositoryImplTest {
 
 		val result = heroesRepository.saveHero(hero)
 
-		result.shouldBeRight(Unit)
+		result shouldBeRight Unit
 		coVerify(exactly = 1) { heroesCacheSource.saveHero(hero.toData()) }
 		coVerify(exactly = 0) { heroesRemoteSource.saveHero(hero.toData()) }
 	}
@@ -138,7 +138,7 @@ internal class HeroesRepositoryImplTest {
 
 		val result = heroesRepository.saveHeroes(heroes)
 
-		result.shouldBeRight(Unit)
+		result shouldBeRight Unit
 		coVerify(exactly = 1) { heroesCacheSource.saveHeroes(heroes.toData()) }
 		coVerify(exactly = 0) { heroesRemoteSource.saveHeroes(heroes.toData()) }
 	}
@@ -169,7 +169,7 @@ internal class HeroesRepositoryImplTest {
 
 		heroesCacheSource.stubThrow(t)
 
-		heroesRepository.getFavorites().shouldBeLeft(t)
+		heroesRepository.getFavorites() shouldBeLeft t
 	}
 
 	private fun HeroesDataSource.stubHeroes(heroesData: HeroesData) {

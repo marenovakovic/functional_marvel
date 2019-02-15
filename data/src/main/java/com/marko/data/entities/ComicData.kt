@@ -1,8 +1,11 @@
-package com.marko.functional_marvel.entities
+package com.marko.data.entities
 
-import com.karumi.marvelapiclient.model.*
+import com.marko.domain.entities.*
 
-data class Comic(
+/**
+ * Domain layer comic representation
+ */
+data class ComicData(
 	val id: String,
 	val digitalId: Int,
 	val title: String,
@@ -19,17 +22,17 @@ data class Comic(
 	val pageCount: Int,
 	val textObjects: List<TextObject>,
 	val resourceURI: String,
-	val urls: List<HeroUrl>,
-	val series: ComicResourceDto,
-	val variants: List<HeroResource<*>>,
+	val urls: List<MarvelUrl>,
+	val series: ComicResource,
+	val variants: List<MarvelResource>,
 	val collections: List<MarvelCollection<*>>,
 	val collectedIssues: List<MarvelCollection<*>>,
 	val dates: List<MarvelDate>,
 	val prices: List<MarvelPrice>,
 	val thumbnail: MarvelImage,
 	val images: List<MarvelImage>,
-	val creators: HeroResource<CreatorResourceDto>,
-	val characters: HeroResource<CharacterResourceDto>,
-	val stories: HeroResource<StoryResourceDto>,
-	val events: HeroResource<EventResourceDto>
+	val creators: MarvelResources<CreatorResource>,
+	val characters: MarvelResources<HeroResource>,
+	val stories: MarvelResources<StoryResource>,
+	val events: MarvelResources<EventResource>
 )

@@ -5,7 +5,17 @@ sealed class MarvelResource(
 	val name: String
 )
 
+class HeroResource(
+	resourceUrl: String,
+	name: String
+) : MarvelResource(resourceUrl = resourceUrl, name = name)
+
 class ComicResource(
+	resourceUrl: String,
+	name: String
+) : MarvelResource(resourceUrl = resourceUrl, name = name)
+
+class CreatorResource(
 	resourceUrl: String,
 	name: String
 ) : MarvelResource(resourceUrl = resourceUrl, name = name)

@@ -21,9 +21,11 @@ interface HeroesRepository {
 	/**
 	 * Get [HeroEntity]
 	 *
-	 * @return [Either] containing either result [HeroEntity] or [Throwable] if something went wrong
+	 * @param heroId [HeroId]
+	 *
+	 * @return [IO] with [Either] containing either result [HeroEntity] or [Throwable] if something went wrong
 	 */
-	suspend fun getHero(heroId: HeroId): Either<Throwable, HeroEntity>
+	fun getHero(heroId: HeroId): IO<Either<Throwable, HeroEntity>>
 
 	/**
 	 * Get [HeroesEntity] that are saved as favorites

@@ -20,7 +20,7 @@ import javax.inject.Inject
 class HeroesViewModel @Inject constructor(
 	private val dispatchers: CoroutineDispatchers,
 	private val fetchHeroes: FetchHeroes
-) : BaseViewModel() {
+) : BaseViewModel(dispatchers) {
 
 	/**
 	 * [MutableLiveData] holding loading state [Boolean], exposed as [LiveData]
@@ -53,11 +53,13 @@ class HeroesViewModel @Inject constructor(
 	}
 
 	private fun handleHeroesResult(result: Either<Throwable, Either<Throwable, HeroesEntity>>) {
-		result.fold(
-			{ _error.postValue(it.marvelException) },
-			{ it.fold({ _error.postValue(it.marvelException) }, ::handleHeroes) }
-		)
+		result.fold({ _error.postValue(it.marvelException) }, ::handleHeroes)
 	}
 
-	private fun handleHeroes(heroes: HeroesEntity) = _heroes.postValue(heroes.toPresentation())
+	private fun handleHeroes(heroes: Either<Throwable, HeroesEntity>) {
+		heroes.fold(
+			{ _error.postValue(it.marvelException) },
+			{ _heroes.postValue(it.toPresentation()) }
+		)
+	}
 }
