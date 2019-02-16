@@ -6,6 +6,5 @@ data class MarvelResources<T>(
 	val collectionUri: String,
 	val items: List<T>
 ) {
-
 	constructor() : this(available = - 1, returned = - 1, collectionUri = "", items = emptyList())
 }

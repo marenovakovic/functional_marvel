@@ -9,8 +9,8 @@ import com.marko.domain.exceptions.NotFound
 import com.marko.domain.exceptions.UnauthorizedAccess
 import com.marko.domain.exceptions.UnknownMarvelError
 
-val <A> MarvelResponse<A>.safe: Try<A>
-	get() = when (code) {
+fun <A> MarvelResponse<A>.runSafe(): Try<A> =
+	when (code) {
 		200 -> Success(response)
 		else -> Failure(marvelError)
 	}

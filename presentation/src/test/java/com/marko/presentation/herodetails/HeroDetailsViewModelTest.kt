@@ -4,14 +4,18 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import arrow.core.Left
 import arrow.core.Right
 import arrow.effects.IO
+import com.marko.domain.entities.ComicsEntity
 import com.marko.domain.entities.HeroEntity
+import com.marko.domain.entities.HeroId
 import com.marko.domain.exceptions.MarvelException
 import com.marko.domain.exceptions.NotFound
+import com.marko.domain.usecases.FetchComics
 import com.marko.domain.usecases.FetchHero
 import com.marko.domain.usecases.invoke
 import com.marko.presentation.TestCoroutineDispatchers
 import com.marko.presentation.entities.Hero
 import com.marko.presentation.mappers.toPresentation
+import com.marko.presentation.sampledata.comicsEntity
 import com.marko.presentation.sampledata.heroEntity
 import com.marko.presentation.stubObserver
 import io.mockk.every
@@ -30,10 +34,15 @@ class HeroDetailsViewModelTest {
 
 	private val dispatchers = TestCoroutineDispatchers()
 	private val fetchHero = mockk<FetchHero>()
-	private val viewModel = HeroDetailsViewModel(dispatchers = dispatchers,fetchHero = fetchHero)
+	private val fetchComics = mockk<FetchComics>()
+	private val viewModel = HeroDetailsViewModel(
+		dispatchers = dispatchers,
+		fetchHero = fetchHero,
+		fetchComics = fetchComics
+	)
 
 	@Test
-	fun `is fetchHero called`() {
+	fun `does fetch call fetchHero`() {
 		val heroId = "1"
 		val hero = heroEntity()
 
@@ -45,7 +54,7 @@ class HeroDetailsViewModelTest {
 	}
 
 	@Test
-	fun `check live data value after fetch is called`() {
+	fun `check heroes live data value after fetch is called`() {
 		val heroId = "1"
 		val hero = heroEntity(id = heroId)
 
@@ -60,7 +69,7 @@ class HeroDetailsViewModelTest {
 	}
 
 	@Test
-	fun `check live data value when fetch fails`() {
+	fun `check error live data value when fetchHeroes fails`() {
 		val e = NotFound
 
 		fetchHero.stubThrow(e)
@@ -73,11 +82,27 @@ class HeroDetailsViewModelTest {
 		verify(exactly = 1) { observer.onChanged(e) }
 	}
 
+	@Test
+	fun `does fetch call fetchComics`() {
+		val comics = comicsEntity
+
+		fetchComics.stubComics(comics)
+
+		val heroId = "1"
+		viewModel.fetch(heroId = heroId)
+
+		verify(exactly = 1) { fetchComics() }
+	}
+
 	private fun FetchHero.stubHero(heroEntity: HeroEntity) {
 		every { execute(any()) } returns IO.just(Right(heroEntity))
 	}
 
 	private fun FetchHero.stubThrow(e: MarvelException) {
 		every { execute(any()) } returns IO.just(Left(e))
+	}
+
+	private fun FetchComics.stubComics(comics: ComicsEntity) {
+		every { execute(any()) } returns IO.just(Right(comics))
 	}
 }

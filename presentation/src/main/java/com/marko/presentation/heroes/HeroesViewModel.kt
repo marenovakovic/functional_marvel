@@ -3,6 +3,7 @@ package com.marko.presentation.heroes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import arrow.core.Either
+import arrow.effects.extensions.io.fx.fx
 import arrow.effects.extensions.io.unsafeRun.runNonBlocking
 import arrow.unsafe
 import com.marko.domain.dispatchers.CoroutineDispatchers
@@ -14,9 +15,15 @@ import com.marko.domain.usecases.invoke
 import com.marko.presentation.base.BaseViewModel
 import com.marko.presentation.entities.Heroes
 import com.marko.presentation.mappers.toPresentation
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Fetches [Heroes] data and exposes it to the view
+ *
+ * @param dispatchers [CoroutineDispatchers]
+ *
+ * @param fetchHeroes [FetchHeroes] use case for fetching [Heroes]
+ */
 class HeroesViewModel @Inject constructor(
 	private val dispatchers: CoroutineDispatchers,
 	private val fetchHeroes: FetchHeroes
@@ -47,9 +54,9 @@ class HeroesViewModel @Inject constructor(
 	 * Start the fetching flow
 	 */
 	fun fetch() {
-		launch(dispatchers.io) {
-			unsafe { runNonBlocking({ fetchHeroes() }, ::handleHeroesResult) }
-		}
+		val flow = fx { ! ! dispatchers.io.effect { fetchHeroes() } }
+
+		unsafe { runNonBlocking({ flow }, ::handleHeroesResult) }
 	}
 
 	private fun handleHeroesResult(result: Either<Throwable, Either<Throwable, HeroesEntity>>) {

@@ -4,12 +4,11 @@ import arrow.core.Either
 import arrow.core.getOrElse
 import arrow.effects.IO
 import arrow.effects.extensions.io.fx.fx
-import com.marko.data.injection.DI
 import com.marko.data.mappers.toEntity
 import com.marko.domain.comics.ComicsRepository
 import com.marko.domain.entities.ComicsEntity
+import com.marko.domain.entities.HeroId
 import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * [ComicsRepository] implementations
@@ -19,11 +18,19 @@ import javax.inject.Named
  * @param comicsCacheSource [ComicsDataSource] database access point
  */
 class ComicsRepositoryImpl @Inject constructor(
-	@Named(DI.COMICS_REMOTE_SOURCE) private val comicsRemoteSource: ComicsDataSource,
-	@Named(DI.COMICS_REMOTE_SOURCE) private val comicsCacheSource: ComicsDataSource
+	private val comicsRemoteSource: ComicsDataSource,
+	private val comicsCacheSource: ComicsDataSource
 ) : ComicsRepository {
 
 	override fun getComics(): IO<Either<Throwable, ComicsEntity>> = fx {
+		val cachedComics = ! effect { comicsCacheSource.getComics() }
+
+		if (cachedComics.isLeft() || cachedComics.getOrElse { emptyList() }.isEmpty()) ! effect { comicsRemoteSource.getComics() }
+		else cachedComics
+	}
+		.map { result -> result.map { comics -> comics.toEntity() } }
+
+	override fun getComicsForHero(heroId: HeroId): IO<Either<Throwable, ComicsEntity>> = fx {
 		val cachedComics = ! effect { comicsCacheSource.getComics() }
 
 		if (cachedComics.isLeft() || cachedComics.getOrElse { emptyList() }.isEmpty()) ! effect { comicsRemoteSource.getComics() }

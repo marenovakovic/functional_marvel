@@ -19,7 +19,7 @@ internal class ComicsRepositoryImplTest {
 		ComicsRepositoryImpl(comicsRemoteSource = remoteSource, comicsCacheSource = cacheSource)
 
 	@Test
-	fun `check that remote source is NOT called when cache source returns valid result`() {
+	fun `check that remote source is NOT called when cache source returns valid result for getComics`() {
 		val comicsData = comicsData
 
 		cacheSource.stubComics(comicsData)
@@ -32,7 +32,7 @@ internal class ComicsRepositoryImplTest {
 	}
 
 	@Test
-	fun `check that remote source IS called when cache source returns invalid result`() {
+	fun `check that remote source IS called when cache source returns invalid result for getComics`() {
 		val t = Throwable("nem'm")
 		val comicsData = comicsData
 
@@ -46,11 +46,43 @@ internal class ComicsRepositoryImplTest {
 		coVerify(exactly = 1) { remoteSource.getComics() }
 	}
 
+	@Test
+	fun `check that remote source is NOT called when cache source returns valid result for getComicsForHero`() {
+		val heroId = "1"
+		val comicsData = comicsData
+
+		cacheSource.stubComics(comicsData)
+
+		val result = comicsRepository.getComicsForHero(heroId = heroId).unsafeRunSync()
+
+		result shouldBeRight comicsData.toEntity()
+		coVerify(exactly = 1) { cacheSource.getComicsForHero(heroId = heroId) }
+		coVerify(exactly = 0) { remoteSource.getComicsForHero(any()) }
+	}
+
+	@Test
+	fun `check that remote source IS called when cache source returns invalid result for getComicsForHero`() {
+		val heroId = "1"
+		val comicsData = comicsData
+		val t = Throwable("nem'm")
+
+		cacheSource.stubThrow(t)
+		remoteSource.stubComics(comicsData)
+
+		val result = comicsRepository.getComicsForHero(heroId = heroId).unsafeRunSync()
+
+		result shouldBeRight comicsData.toEntity()
+		coVerify(exactly = 1) { cacheSource.getComicsForHero(heroId = heroId) }
+		coVerify(exactly = 1) { remoteSource.getComicsForHero(heroId = heroId) }
+	}
+
 	private fun ComicsDataSource.stubComics(comics: ComicsData) {
 		coEvery { getComics() } returns Right(comics)
+		coEvery { getComicsForHero(any()) } returns Right(comics)
 	}
 
 	private fun ComicsDataSource.stubThrow(t: Throwable) {
 		coEvery { getComics() } returns Left(t)
+		coEvery { getComicsForHero(any()) } returns Left(t)
 	}
 }
