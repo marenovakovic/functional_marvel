@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.karumi.marvelapiclient.CharacterApiClient
 import com.karumi.marvelapiclient.ComicApiClient
 import com.karumi.marvelapiclient.MarvelApiConfig
+import com.karumi.marvelapiclient.SeriesApiClient
 import com.marko.cache.database.MarvelDatabase
 import com.marko.cache.heroes.HeroesCacheRepositoryImpl
 import com.marko.cache.heroes.HeroesDao
@@ -71,9 +72,17 @@ class AppModule(private val context: Context) {
 	@Provides
 	fun marvelApiConfig(): MarvelApiConfig =
 		MarvelApiConfig.with(
-			"a5df0eadce2633ac1a02a9842284d454",
-			"36a01c37613b4ed4efffca64708be3b6adbbbd58"
+			"public_key",
+			"private_key"
 		)
+
+	@Singleton
+	@Provides
+	fun marvelDatabase(context: Context): MarvelDatabase = MarvelDatabase.getInstance(context)
+
+	@Singleton
+	@Provides
+	fun heroesDao(marvelDatabase: MarvelDatabase): HeroesDao = marvelDatabase.heroesDao()
 
 	@Singleton
 	@Provides
@@ -85,9 +94,5 @@ class AppModule(private val context: Context) {
 
 	@Singleton
 	@Provides
-	fun marvelDatabase(context: Context): MarvelDatabase = MarvelDatabase.getInstance(context)
-
-	@Singleton
-	@Provides
-	fun heroesDao(marvelDatabase: MarvelDatabase): HeroesDao = marvelDatabase.heroesDao()
+	fun seriesClient(config: MarvelApiConfig): SeriesApiClient = SeriesApiClient(config)
 }

@@ -5,8 +5,8 @@ import com.marko.presentation.entities.Hero
 import com.marko.presentation.entities.Heroes
 
 fun heroEntity(
-	id: String = "id",
-	name: String = "name",
+	id: String = "itemId",
+	name: String = "itemTitle",
 	description: String = "description",
 	modified: String = "modified",
 	resourceUri: String = "resourceUri",
@@ -31,8 +31,8 @@ fun heroEntity(
 )
 
 fun hero(
-	id: String = "id",
-	name: String = "name",
+	id: String = "itemId",
+	name: String = "itemTitle",
 	description: String = "description",
 	modified: String = "modified",
 	resourceUri: String = "resourceUri",

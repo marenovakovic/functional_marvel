@@ -1,7 +1,7 @@
 package com.marko.domain.entities
 
 /**
- * Domain layer comic representation
+ * Domain layer Comic representation
  */
 data class ComicEntity(
 	val id: String,

@@ -11,13 +11,17 @@ import com.marko.domain.dispatchers.CoroutineDispatchers
 import com.marko.domain.entities.ComicsEntity
 import com.marko.domain.entities.HeroEntity
 import com.marko.domain.entities.HeroId
+import com.marko.domain.entities.SeriesEntity
 import com.marko.domain.exceptions.MarvelException
 import com.marko.domain.exceptions.marvelException
 import com.marko.domain.usecases.FetchComicsForHero
 import com.marko.domain.usecases.FetchHero
+import com.marko.domain.usecases.FetchSeriesForHero
 import com.marko.domain.usecases.invoke
 import com.marko.presentation.base.BaseViewModel
+import com.marko.presentation.entities.Comics
 import com.marko.presentation.entities.Hero
+import com.marko.presentation.entities.Series
 import com.marko.presentation.mappers.toPresentation
 import javax.inject.Inject
 
@@ -27,22 +31,41 @@ import javax.inject.Inject
  * @param dispatchers [CoroutineDispatchers]
  *
  * @param fetchHero [FetchHero] use case for fetching [Hero]
+ *
+ * @param fetchComicsForHero [FetchComicsForHero] use case for fetching [Hero] related [Comics]
+ *
+ * @param fetchSeriesForHero [FetchSeriesForHero] use case for fetching [Hero] related [Series]
  */
 class HeroDetailsViewModel @Inject constructor(
 	private val dispatchers: CoroutineDispatchers,
 	private val fetchHero: FetchHero,
-	private val fetchComicsForHero: FetchComicsForHero
+	private val fetchComicsForHero: FetchComicsForHero,
+	private val fetchSeriesForHero: FetchSeriesForHero
 ) : BaseViewModel(dispatchers) {
 
 	/**
-	 * [MutableLiveData] holding loading state [Hero], exposed as [LiveData]
+	 * [MutableLiveData] holding [Hero], exposed as [LiveData]
 	 */
 	private val _hero = MutableLiveData<Hero>()
 	val hero: LiveData<Hero>
 		get() = _hero
 
 	/**
-	 * [MutableLiveData] holding loading state [MarvelException], exposed as [LiveData]
+	 * [MutableLiveData] holding [Comics], exposed as [LiveData]
+	 */
+	private val _comics = MutableLiveData<Comics>()
+	val comics: LiveData<Comics>
+		get() = _comics
+
+	/**
+	 * [MutableLiveData] holding [Series] [List], exposed as [LiveData]
+	 */
+	private val _series = MutableLiveData<List<Series>>()
+	val series: LiveData<List<Series>>
+		get() = _series
+
+	/**
+	 * [MutableLiveData] holding [MarvelException], exposed as [LiveData]
 	 */
 	private val _error = MutableLiveData<MarvelException>()
 	val error: LiveData<MarvelException>
@@ -59,24 +82,50 @@ class HeroDetailsViewModel @Inject constructor(
 				! dispatchers.io.startFiber(! effect { fetchHero(parameters = heroId) })
 			val comicsFiber =
 				! dispatchers.io.startFiber(! effect { fetchComicsForHero(parameters = heroId) })
+			val seriesFiber =
+				! dispatchers.io.startFiber(! effect { fetchSeriesForHero(parameters = heroId) })
 
-			val hero = ! heroesFiber.join()
-			val comics = ! comicsFiber.join()
-
-			handleHero(hero)
-			handleComics(comics)
+			handleHero(! heroesFiber.join())
+			handleComics(! comicsFiber.join())
+			handleSeries(! seriesFiber.join())
 		}.handleError { _error.postValue(it.marvelException) }
 
 		unsafe { runNonBlocking({ flow }) { } }
 	}
 
+	/**
+	 * Check if received [Either] contains [Throwable] or [HeroEntity]
+	 *
+	 * @param hero [Either] containing [Throwable] or [HeroEntity]
+	 */
 	private fun handleHero(hero: Either<Throwable, HeroEntity>) {
 		hero.fold(
 			{ _error.postValue(it.marvelException) },
-			{ _hero.postValue(it.toPresentation()) })
+			{ _hero.postValue(it.toPresentation()) }
+		)
 	}
 
+	/**
+	 * Check if received [Either] contains [Throwable] or [ComicsEntity]
+	 *
+	 * @param comics [Either] containing [Throwable] or [ComicsEntity]
+	 */
 	private fun handleComics(comics: Either<Throwable, ComicsEntity>) {
-		comics.fold({}, ::println)
+		comics.fold(
+			{ _error.postValue(it.marvelException) },
+			{ _comics.postValue(it.toPresentation()) }
+		)
+	}
+
+	/**
+	 * Check if received [Either] contains [Throwable] or [SeriesEntity] [List]
+	 *
+	 * @param series [Either] containing [Throwable] or [SeriesEntity] [List]
+	 */
+	private fun handleSeries(series: Either<Throwable, List<SeriesEntity>>) {
+		series.fold(
+			{ _error.postValue(it.marvelException) },
+			{ _series.postValue(it.toPresentation()) }
+		)
 	}
 }

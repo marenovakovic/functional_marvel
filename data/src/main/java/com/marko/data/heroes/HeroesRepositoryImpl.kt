@@ -34,31 +34,6 @@ class HeroesRepositoryImpl @Inject constructor(
 	}
 		.map { result -> result.map { heroes -> heroes.toEntity() } }
 
-//	private suspend fun test() {
-//		heroesCacheSource.getHeroes()
-//			.let { cacheResult ->
-//				if (cacheResult.isLeft()) heroesRemoteSource.getHeroes()
-//				else cacheResult
-//			}
-//			.flatMap { cachedHeroes ->
-//				if (cachedHeroes.isEmpty()) {
-//					val fetchedHeroes = heroesRemoteSource.getHeroes()
-//					fetchedHeroes.fold({}, { heroesCacheSource.saveHeroes(it) })
-//					fetchedHeroes
-//				} else {
-//					val heroes = if (cachedHeroes.size < 50) {
-//						val missingHeroes = heroesRemoteSource.getHeroes() // od - do
-//						missingHeroes.fold({}, { heroesCacheSource.saveHeroes(it) })
-//						cachedHeroes + missingHeroes.toOption().getOrElse { listOf() }
-//					} else {
-//						cachedHeroes
-//					}
-//					Right(heroes)
-//				}
-//			}
-//			.map { it.toEntity() }
-//	}
-
 	override fun getHero(heroId: HeroId): IO<Either<Throwable, HeroEntity>> = fx {
 		val cachedHero = ! effect { heroesCacheSource.getHero(heroId = heroId) }
 			.handleErrorWith { effect { heroesRemoteSource.getHero(heroId = heroId) } }

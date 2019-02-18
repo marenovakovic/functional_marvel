@@ -6,11 +6,11 @@ import arrow.core.Right
 import arrow.effects.IO
 import com.marko.domain.entities.ComicsEntity
 import com.marko.domain.entities.HeroEntity
-import com.marko.domain.entities.HeroId
 import com.marko.domain.exceptions.MarvelException
 import com.marko.domain.exceptions.NotFound
-import com.marko.domain.usecases.FetchComics
+import com.marko.domain.usecases.FetchComicsForHero
 import com.marko.domain.usecases.FetchHero
+import com.marko.domain.usecases.FetchSeriesForHero
 import com.marko.domain.usecases.invoke
 import com.marko.presentation.TestCoroutineDispatchers
 import com.marko.presentation.entities.Hero
@@ -34,11 +34,14 @@ class HeroDetailsViewModelTest {
 
 	private val dispatchers = TestCoroutineDispatchers()
 	private val fetchHero = mockk<FetchHero>()
-	private val fetchComics = mockk<FetchComics>()
+	private val fetchComicsForHero = mockk<FetchComicsForHero>()
+	private val fetchSeriesForHero = mockk<FetchSeriesForHero>()
+
 	private val viewModel = HeroDetailsViewModel(
 		dispatchers = dispatchers,
 		fetchHero = fetchHero,
-		fetchComics = fetchComics
+		fetchComicsForHero = fetchComicsForHero,
+		fetchSeriesForHero = fetchSeriesForHero
 	)
 
 	@Test
@@ -86,12 +89,12 @@ class HeroDetailsViewModelTest {
 	fun `does fetch call fetchComics`() {
 		val comics = comicsEntity
 
-		fetchComics.stubComics(comics)
+		fetchComicsForHero.stubComics(comics)
 
 		val heroId = "1"
 		viewModel.fetch(heroId = heroId)
 
-		verify(exactly = 1) { fetchComics() }
+		verify(exactly = 1) { fetchComicsForHero(parameters = heroId) }
 	}
 
 	private fun FetchHero.stubHero(heroEntity: HeroEntity) {
@@ -102,7 +105,7 @@ class HeroDetailsViewModelTest {
 		every { execute(any()) } returns IO.just(Left(e))
 	}
 
-	private fun FetchComics.stubComics(comics: ComicsEntity) {
+	private fun FetchComicsForHero.stubComics(comics: ComicsEntity) {
 		every { execute(any()) } returns IO.just(Right(comics))
 	}
 }

@@ -15,4 +15,4 @@ data class Hero(
 	val stories: MarvelResources<StoryResource>,
 	val events: MarvelResources<EventResource>,
 	val series: MarvelResources<SeriesResource>
-)
+) : MarvelItem(itemId = id, imageUrl = thumbnail.imageUrl, itemTitle = name)

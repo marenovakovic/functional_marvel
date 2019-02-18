@@ -32,4 +32,4 @@ data class Comic(
 	val characters: MarvelResources<HeroResource>,
 	val stories: MarvelResources<StoryResource>,
 	val events: MarvelResources<EventResource>
-)
+) : MarvelItem(itemId = id, imageUrl = thumbnail.imageUrl, itemTitle = title)

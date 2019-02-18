@@ -3,7 +3,7 @@ package com.marko.data.entities
 import com.marko.domain.entities.*
 
 /**
- * Domain layer comic representation
+ * Data layer Comic representation
  */
 data class ComicData(
 	val id: String,
