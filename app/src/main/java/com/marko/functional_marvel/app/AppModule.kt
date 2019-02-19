@@ -72,8 +72,8 @@ class AppModule(private val context: Context) {
 	@Provides
 	fun marvelApiConfig(): MarvelApiConfig =
 		MarvelApiConfig.with(
-			"public_key",
-			"private_key"
+			"a5df0eadce2633ac1a02a9842284d454",
+			"36a01c37613b4ed4efffca64708be3b6adbbbd58"
 		)
 
 	@Singleton

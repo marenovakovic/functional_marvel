@@ -3,7 +3,6 @@ package com.marko.presentation.herodetails
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import arrow.core.Either
-import arrow.effects.extensions.io.applicativeError.handleError
 import arrow.effects.extensions.io.fx.fx
 import arrow.effects.extensions.io.unsafeRun.runNonBlocking
 import arrow.unsafe
@@ -77,20 +76,16 @@ class HeroDetailsViewModel @Inject constructor(
 	 * @param heroId [HeroId]
 	 */
 	fun fetch(heroId: HeroId) {
-		val flow = fx {
-			val heroesFiber =
-				! dispatchers.io.startFiber(! effect { fetchHero(parameters = heroId) })
-			val comicsFiber =
-				! dispatchers.io.startFiber(! effect { fetchComicsForHero(parameters = heroId) })
-			val seriesFiber =
-				! dispatchers.io.startFiber(! effect { fetchSeriesForHero(parameters = heroId) })
+		val heroFlow =
+			fx { ! ! dispatchers.io.effect { fetchHero(parameters = heroId) } }
+		val comicsFlow =
+			fx { ! ! dispatchers.io.effect { fetchComicsForHero(parameters = heroId) } }
+		val seriesFlow =
+			fx { ! ! dispatchers.io.effect { fetchSeriesForHero(parameters = heroId) } }
 
-			handleHero(! heroesFiber.join())
-			handleComics(! comicsFiber.join())
-			handleSeries(! seriesFiber.join())
-		}.handleError { _error.postValue(it.marvelException) }
-
-		unsafe { runNonBlocking({ flow }) { } }
+		unsafe { runNonBlocking({ heroFlow }) { it.fold({}, ::handleHero) } }
+		unsafe { runNonBlocking({ comicsFlow }) { it.fold({}, ::handleComics) } }
+		unsafe { runNonBlocking({ seriesFlow }) { it.fold({}, ::handleSeries) } }
 	}
 
 	/**
