@@ -45,12 +45,12 @@ class HeroesAdapter(
 
 			portrait.setOnClickListener { onClick(hero.id) }
 
-			favoriteButton.anim(hero.isFavorite)
+			favoriteButton.anim(fromInitState = isFavorite)
 
 			favoriteButton.setOnClickListener {
+				onFavoriteClick(hero.copy(isFavorite = isFavorite))
 				isFavorite = ! isFavorite
 				favoriteButton.anim(isFavorite)
-				onFavoriteClick(hero.copy(isFavorite = isFavorite))
 			}
 
 			portrait.loadHero(hero.thumbnail.imageUrl)

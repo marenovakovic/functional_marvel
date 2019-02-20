@@ -12,7 +12,9 @@ import com.marko.domain.entities.*
 data class HeroCache(
 	@PrimaryKey var id: String = "",
 	var name: String = "",
+	@Ignore var isFavorite: Boolean = false,
 	var description: String = "",
+	var imageUrl: String = "",
 	@Ignore var modified: String = "",
 	@Ignore var resourceUri: String = "",
 	@Ignore var urls: List<MarvelUrl> = listOf(),

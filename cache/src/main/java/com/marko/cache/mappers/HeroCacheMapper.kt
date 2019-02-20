@@ -4,6 +4,7 @@ import com.marko.cache.entities.HeroCache
 import com.marko.cache.entities.HeroesCache
 import com.marko.data.entities.HeroData
 import com.marko.data.entities.HeroesData
+import com.marko.domain.entities.MarvelImage
 
 /**
  * Mapping [HeroData] to [HeroCache]
@@ -15,6 +16,8 @@ import com.marko.data.entities.HeroesData
 fun HeroData.toCache(): HeroCache = HeroCache(
 	id = id,
 	name = name,
+	isFavorite = isFavorite,
+	imageUrl = thumbnail.imageUrl,
 	description = description,
 	modified = modified,
 	resourceUri = resourceUri,
@@ -45,11 +48,12 @@ fun HeroesData.toCache(): HeroesCache = map { it.toCache() }
 fun HeroCache.toData(): HeroData = HeroData(
 	id = id,
 	name = name,
+	isFavorite = isFavorite,
 	description = description,
 	modified = modified,
 	resourceUri = resourceUri,
 	urls = urls,
-	thumbnail = thumbnail,
+	thumbnail = MarvelImage(path = "", extension = "", imageUrl = imageUrl),
 	comics = comics,
 	stories = stories,
 	events = events,

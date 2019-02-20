@@ -5,10 +5,10 @@ import com.marko.domain.entities.*
 data class Hero(
 	val id: String,
 	val name: String,
+	val isFavorite: Boolean = false,
 	val description: String,
 	val modified: String,
 	val resourceUri: String,
-	val isFavorite: Boolean = false,
 	val urls: List<MarvelUrl>,
 	val thumbnail: MarvelImage,
 	val comics: MarvelResources<ComicResource>,

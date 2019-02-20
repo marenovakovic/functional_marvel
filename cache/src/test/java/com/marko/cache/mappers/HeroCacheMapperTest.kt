@@ -46,6 +46,7 @@ internal class HeroCacheMapperTest {
 	private infix fun HeroData.shouldEqual(heroCache: HeroCache) {
 		assert(id == heroCache.id)
 		assert(name == heroCache.name)
+		assert(isFavorite == heroCache.isFavorite)
 		assert(description == heroCache.description)
 	}
 

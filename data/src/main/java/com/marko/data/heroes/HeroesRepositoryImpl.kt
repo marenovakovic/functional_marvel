@@ -29,8 +29,17 @@ class HeroesRepositoryImpl @Inject constructor(
 	override fun getHeroes(): IO<Either<Throwable, HeroesEntity>> = fx {
 		val cachedHeroes = ! effect { heroesCacheSource.getHeroes() }
 
-		if (cachedHeroes.isLeft() || cachedHeroes.getOrElse { emptyList() }.isEmpty()) ! effect { heroesRemoteSource.getHeroes() }
-		else cachedHeroes
+		val heroes =
+			if (cachedHeroes.isLeft() || ! cachedHeroes.exists { it.isNotEmpty() }) {
+				val fetchedHeroes = ! effect { heroesRemoteSource.getHeroes() }
+
+				fetchedHeroes.getOrElse { emptyList() }
+					.let { ! effect { saveHeroes(it.toEntity()) } }
+
+				fetchedHeroes
+			} else cachedHeroes
+
+		heroes
 	}
 		.map { result -> result.map { heroes -> heroes.toEntity() } }
 
@@ -44,12 +53,20 @@ class HeroesRepositoryImpl @Inject constructor(
 	}
 		.map { result -> result.map { hero -> hero.toEntity() } }
 
-	override suspend fun getFavorites(): Either<Throwable, HeroesEntity> =
-		heroesCacheSource.getFavorites().map { it.toEntity() }
-
 	override suspend fun saveHero(hero: HeroEntity): Either<Throwable, Unit> =
 		heroesCacheSource.saveHero(hero.toData())
 
 	override suspend fun saveHeroes(heroes: HeroesEntity): Either<Throwable, Unit> =
 		heroesCacheSource.saveHeroes(heroes.toData())
+
+	override suspend fun getFavorites(): Either<Throwable, HeroesEntity> =
+		heroesCacheSource.getFavorites().map { it.toEntity() }
+
+	override fun setFavorite(heroId: HeroId): IO<Either<Throwable, Unit>> = fx {
+		! effect { heroesCacheSource.setFavorite(heroId = heroId) }
+	}
+
+	override fun removeFavorite(heroId: HeroId): IO<Either<Throwable, Unit>> = fx {
+		! effect { heroesCacheSource.removeFavorite(heroId = heroId) }
+	}
 }

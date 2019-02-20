@@ -14,4 +14,10 @@ interface HeroesCacheRepository {
 	suspend fun queryHeroes(): Either<Throwable, HeroesData>
 
 	suspend fun queryHero(heroId: HeroId): Either<Throwable, HeroData>
+
+	suspend fun queryFavorites(): Either<Throwable, HeroesData>
+
+	suspend fun setFavorite(heroId: HeroId): Either<Throwable, Unit>
+
+	suspend fun removeFavorite(heroId: HeroId): Either<Throwable, Unit>
 }

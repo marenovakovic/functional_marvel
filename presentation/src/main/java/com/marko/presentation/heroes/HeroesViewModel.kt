@@ -11,9 +11,12 @@ import com.marko.domain.entities.HeroesEntity
 import com.marko.domain.exceptions.MarvelException
 import com.marko.domain.exceptions.marvelException
 import com.marko.domain.usecases.FetchHeroes
+import com.marko.domain.usecases.ResolveFavorite
 import com.marko.domain.usecases.invoke
 import com.marko.presentation.base.BaseViewModel
+import com.marko.presentation.entities.Hero
 import com.marko.presentation.entities.Heroes
+import com.marko.presentation.mappers.toEntity
 import com.marko.presentation.mappers.toPresentation
 import javax.inject.Inject
 
@@ -23,10 +26,13 @@ import javax.inject.Inject
  * @param dispatchers [CoroutineDispatchers]
  *
  * @param fetchHeroes [FetchHeroes] use case for fetching [Heroes]
+ *
+ * @param resolveFavorite [ResolveFavorite]
  */
 class HeroesViewModel @Inject constructor(
 	private val dispatchers: CoroutineDispatchers,
-	private val fetchHeroes: FetchHeroes
+	private val fetchHeroes: FetchHeroes,
+	private val resolveFavorite: ResolveFavorite
 ) : BaseViewModel(dispatchers) {
 
 	/**
@@ -68,5 +74,14 @@ class HeroesViewModel @Inject constructor(
 			{ _error.postValue(it.marvelException) },
 			{ _heroes.postValue(it.toPresentation()) }
 		)
+	}
+
+	fun setFavorite(hero: Hero) {
+		val flow =
+			fx { ! ! dispatchers.io.effect { resolveFavorite(parameters = hero.toEntity()) } }
+
+		unsafe { runNonBlocking({ flow }) {
+			it.fold({ it.printStackTrace() }, { it.fold({ it.printStackTrace() }, {}) })
+		} }
 	}
 }

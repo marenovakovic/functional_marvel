@@ -5,6 +5,7 @@ import com.marko.domain.entities.*
 fun hero(
 	id: String = "id",
 	name: String = "name",
+	isFavorite: Boolean = false,
 	description: String = "description",
 	modified: String = "modified",
 	resourceUri: String = "resourceUri",
@@ -17,6 +18,7 @@ fun hero(
 ): HeroEntity = HeroEntity(
 	id = id,
 	name = name,
+	isFavorite = isFavorite,
 	description = description,
 	modified = modified,
 	resourceUri = resourceUri,
@@ -29,8 +31,4 @@ fun hero(
 )
 
 val sampleHeroes: HeroesEntity
-	get() = listOf(
-		hero(),
-		hero(),
-		hero()
-	)
+	get() = listOf(hero(), hero(), hero())

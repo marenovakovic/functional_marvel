@@ -63,5 +63,5 @@ class HeroesFragment : BaseFragment() {
 		findNavController().navigate(action)
 	}
 
-	private fun setFavorite(hero: Hero) {}
+	private fun setFavorite(hero: Hero) = viewModel.setFavorite(hero)
 }

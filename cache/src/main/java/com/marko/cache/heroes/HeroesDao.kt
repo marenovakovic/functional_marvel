@@ -1,9 +1,7 @@
 package com.marko.cache.heroes
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import com.marko.cache.entities.FavoriteHero
 import com.marko.cache.entities.HeroCache
 import com.marko.domain.entities.HeroId
 
@@ -12,6 +10,34 @@ import com.marko.domain.entities.HeroId
  */
 @Dao
 interface HeroesDao {
+
+	/**
+	 * Query single [HeroCache]
+	 *
+	 * @param heroId [HeroId] of [HeroCache] that query is for
+	 *
+	 * @return [HeroCache] with matching [HeroId]
+	 */
+	@Query("SELECT * FROM heroes WHERE id = :heroId")
+	fun queryHero(heroId: HeroId): HeroCache
+
+	/**
+	 * Query all [HeroCache]
+	 *
+	 * @return [HeroCache] [List]
+	 */
+	@Query("SELECT * FROM heroes")
+	fun queryAllHeroes(): List<HeroCache>
+
+	/**
+	 * Query [HeroCache] matching ids passed
+	 *
+	 * @param ids [HeroId] [List] ids of heroes that are queried for
+	 *
+	 * @return [HeroCache] [List]
+	 */
+	@Query("SELECT * FROM heroes WHERE id IN(:ids)")
+	fun queryHeroes(ids: List<HeroId>): List<HeroCache>
 
 	/**
 	 * Insert single [HeroCache] into database
@@ -30,20 +56,26 @@ interface HeroesDao {
 	fun saveHeroes(heroes: List<HeroCache>)
 
 	/**
-	 * Query single [HeroCache] from database
+	 * Query all [FavoriteHero] from database
 	 *
-	 * @param heroId [HeroId] of [HeroCache] that query is for
-	 *
-	 * @return [HeroCache] with matching [HeroId]
+	 * @return [FavoriteHero] [List]
 	 */
-	@Query("SELECT * FROM heroes WHERE id = :heroId")
-	fun queryHero(heroId: HeroId): HeroCache
+	@Query("SELECT * FROM favorite_heroes")
+	fun queryFavorites(): List<FavoriteHero>
 
 	/**
-	 * Query all [HeroCache] from database
+	 * Insert [FavoriteHero] to favorites
 	 *
-	 * @return [HeroCache] [List]
+	 * @param favoriteHero [FavoriteHero] that should be inserted into favorites
 	 */
-	@Query("SELECT * FROM heroes")
-	fun queryAllHeroes(): List<HeroCache>
+	@Insert
+	fun setFavorite(favoriteHero: FavoriteHero)
+
+	/**
+	 * Delete hero from favorites
+	 *
+	 * @param favoriteHero [FavoriteHero] to be removed from favorites
+	 */
+	@Delete
+	fun removeFavorite(favoriteHero: FavoriteHero)
 }

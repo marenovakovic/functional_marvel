@@ -8,15 +8,19 @@ import com.marko.domain.entities.HeroesEntity
 import com.marko.domain.exceptions.MarvelException
 import com.marko.domain.exceptions.NotFound
 import com.marko.domain.usecases.FetchHeroes
+import com.marko.domain.usecases.ResolveFavorite
 import com.marko.domain.usecases.invoke
 import com.marko.presentation.TestCoroutineDispatchers
 import com.marko.presentation.entities.Heroes
+import com.marko.presentation.mappers.toEntity
 import com.marko.presentation.mappers.toPresentation
+import com.marko.presentation.sampledata.hero
 import com.marko.presentation.sampledata.heroesEntity
 import com.marko.presentation.stubObserver
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
@@ -31,7 +35,12 @@ internal class HeroesViewModelTest {
 
 	private val dispatchers = TestCoroutineDispatchers()
 	private val fetchHeroes = mockk<FetchHeroes>()
-	private val viewModel = HeroesViewModel(dispatchers = dispatchers, fetchHeroes = fetchHeroes)
+	private val resolveFavorite = mockk<ResolveFavorite>()
+	private val viewModel = HeroesViewModel(
+		dispatchers = dispatchers,
+		fetchHeroes = fetchHeroes,
+		resolveFavorite = resolveFavorite
+	)
 
 	@Test
 	fun `does fetch calls usecase`() = runBlocking {
@@ -70,6 +79,15 @@ internal class HeroesViewModelTest {
 		viewModel.fetch()
 
 		coVerify(exactly = 1) { observer.onChanged(t) }
+	}
+
+	@Test
+	fun `does setFavorite calls ResolveFavorite use case`() {
+		val hero = hero()
+
+		viewModel.setFavorite(hero)
+
+		verify(exactly = 1) { resolveFavorite.execute(parameters = hero.toEntity()) }
 	}
 
 	private fun FetchHeroes.stubHeroes(heroes: HeroesEntity) {
