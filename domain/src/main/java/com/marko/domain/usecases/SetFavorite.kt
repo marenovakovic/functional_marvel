@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.effects.IO
 import com.marko.domain.entities.HeroId
 import com.marko.domain.heroes.HeroesRepository
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 /**
