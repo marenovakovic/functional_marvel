@@ -1,7 +1,6 @@
 package com.marko.data.comics
 
 import arrow.core.Either
-import arrow.core.getOrElse
 import arrow.effects.IO
 import arrow.effects.extensions.io.fx.fx
 import com.marko.data.mappers.toEntity
@@ -24,17 +23,15 @@ class ComicsRepositoryImpl @Inject constructor(
 
 	override fun getComics(): IO<Either<Throwable, ComicsEntity>> = fx {
 		val cachedComics = ! effect { comicsCacheSource.getComics() }
-
-		if (cachedComics.isLeft() || cachedComics.getOrElse { emptyList() }.isEmpty()) ! effect { comicsRemoteSource.getComics() }
-		else cachedComics
+		if (cachedComics.isRight() && cachedComics.exists { it.isNotEmpty() }) return@fx cachedComics
+		! effect { comicsRemoteSource.getComics() }
 	}
 		.map { result -> result.map { comics -> comics.toEntity() } }
 
 	override fun getComicsForHero(heroId: HeroId): IO<Either<Throwable, ComicsEntity>> = fx {
-		val cachedComics = ! effect { comicsCacheSource.getComics() }
-
-		if (cachedComics.isLeft() || cachedComics.getOrElse { emptyList() }.isEmpty()) ! effect { comicsRemoteSource.getComics() }
-		else cachedComics
+		val cachedComics = ! effect { comicsCacheSource.getComicsForHero(heroId = heroId) }
+		if (cachedComics.isRight() && cachedComics.exists { it.isNotEmpty() }) return@fx cachedComics
+		! effect { comicsRemoteSource.getComicsForHero(heroId = heroId) }
 	}
 		.map { result -> result.map { comics -> comics.toEntity() } }
 }

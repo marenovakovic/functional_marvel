@@ -19,17 +19,11 @@ class ComicsRemoteRepositoryImpl @Inject constructor(
 	private val comicsApiClient: ComicApiClient
 ) : ComicsRemoteRepository {
 
-	override suspend fun fetchComics(): Either<Throwable, ComicsData> {
-		val result = comicsApiClient.getAll(0, 25).runSafe().map { it.toData() }
-
-		return result.toEither()
-	}
+	override suspend fun fetchComics(): Either<Throwable, ComicsData> =
+		comicsApiClient.getAll(0, 25).runSafe().map { it.toData() }.toEither()
 
 	override suspend fun fetchComicsForHero(heroId: HeroId): Either<Throwable, ComicsData> {
 		val query = ComicsQuery.Builder.create().addCharacter(heroId.toInt()).build()
-
-		val result = comicsApiClient.getAll(query).runSafe().map { it.toData() }
-
-		return result.toEither()
+		return comicsApiClient.getAll(query).runSafe().map { it.toData() }.toEither()
 	}
 }

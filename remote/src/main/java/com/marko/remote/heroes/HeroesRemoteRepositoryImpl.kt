@@ -19,17 +19,11 @@ class HeroesRemoteRepositoryImpl @Inject constructor(
 	private val characterApiClient: CharacterApiClient
 ) : HeroesRemoteRepository {
 
-	override suspend fun fetchHeroes(): Either<Throwable, HeroesData> {
-		val response = characterApiClient.getAll(0, 25).runSafe().map {
+	override suspend fun fetchHeroes(): Either<Throwable, HeroesData> =
+		characterApiClient.getAll(0, 25).runSafe().map {
 			it.characters.map { it.toData() }
-		}
+		}.toEither()
 
-		return response.toEither()
-	}
-
-	override suspend fun fetchHero(heroId: HeroId): Either<Throwable, HeroData> {
-		val response = characterApiClient.getCharacter(heroId).runSafe().map { it.toData() }
-
-		return response.toEither()
-	}
+	override suspend fun fetchHero(heroId: HeroId): Either<Throwable, HeroData> =
+		characterApiClient.getCharacter(heroId).runSafe().map { it.toData() }.toEither()
 }
