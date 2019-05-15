@@ -9,10 +9,17 @@ sourceCompatibility = 1.8
 dependencies {
 
     //Arrow
-    implementation "io.arrow-kt:arrow-effects:$arrowVersion"
+    implementation "io.arrow-kt:arrow-core-data:$arrowVersion"
+    implementation "io.arrow-kt:arrow-core-extensions:$arrowVersion"
+    implementation "io.arrow-kt:arrow-syntax:$arrowVersion"
+    implementation "io.arrow-kt:arrow-typeclasses:$arrowVersion"
     implementation "io.arrow-kt:arrow-effects-data:$arrowVersion"
     implementation "io.arrow-kt:arrow-effects-extensions:$arrowVersion"
     implementation "io.arrow-kt:arrow-effects-io-extensions:$arrowVersion"
+    implementation "io.arrow-kt:arrow-effects-rx2-data:$arrowVersion"
+    implementation "io.arrow-kt:arrow-effects-rx2-extensions:$arrowVersion"
+    implementation "io.arrow-kt:arrow-extras-data:$arrowVersion"
+    implementation "io.arrow-kt:arrow-extras-extensions:$arrowVersion"
 
     // JavaX Inject
     implementation "javax.inject:javax.inject:$javaxInjectVersion"

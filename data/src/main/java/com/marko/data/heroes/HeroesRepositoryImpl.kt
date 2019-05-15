@@ -28,28 +28,18 @@ class HeroesRepositoryImpl @Inject constructor(
 
 	override fun getHeroes(): IO<Either<Throwable, HeroesEntity>> = fx {
 		val cachedHeroes = ! effect { heroesCacheSource.getHeroes() }
-
-		val heroes =
-			if (cachedHeroes.isLeft() || ! cachedHeroes.exists { it.isNotEmpty() }) {
-				val fetchedHeroes = ! effect { heroesRemoteSource.getHeroes() }
-
-				fetchedHeroes.getOrElse { emptyList() }
-					.let { ! effect { saveHeroes(it.toEntity()) } }
-
-				fetchedHeroes
-			} else cachedHeroes
-
-		heroes
+		if (cachedHeroes.isRight() && cachedHeroes.exists { it.isNotEmpty() }) return@fx cachedHeroes
+		val fetchedHeroes = ! effect { heroesRemoteSource.getHeroes() }
+		fetchedHeroes.getOrElse { emptyList() }
+			.let { ! effect { saveHeroes(it.toEntity()) } }
+		fetchedHeroes
 	}
 		.map { result -> result.map { heroes -> heroes.toEntity() } }
 
 	override fun getHero(heroId: HeroId): IO<Either<Throwable, HeroEntity>> = fx {
 		val cachedHero = ! effect { heroesCacheSource.getHero(heroId = heroId) }
-			.handleErrorWith { effect { heroesRemoteSource.getHero(heroId = heroId) } }
-
-		if (! cachedHero.exists { hero -> hero.id.isNotBlank() })
-			! effect { heroesRemoteSource.getHero(heroId = heroId) }
-		else cachedHero
+		if (cachedHero.isRight() && cachedHero.exists { hero -> hero.id.isNotBlank() }) return@fx cachedHero
+		! effect { heroesRemoteSource.getHero(heroId = heroId) }
 	}
 		.map { result -> result.map { hero -> hero.toEntity() } }
 

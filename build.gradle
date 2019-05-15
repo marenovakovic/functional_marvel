@@ -13,7 +13,7 @@ buildscript {
         androidGradlePluginVersion = '3.2.1'
         appCompatVersion = '1.0.2'
         archCoreTestingVersion = '2.0.0'
-        arrowVersion = '0.9.0-SNAPSHOT'
+        arrowVersion = '0.9.0'
         assertjVersion = '3.8.0'
         annotationsVersion = '28.0.0'
         constraintLayoutVersion = '2.0.0-alpha2'

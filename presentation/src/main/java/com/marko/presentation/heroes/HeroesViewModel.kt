@@ -80,8 +80,10 @@ class HeroesViewModel @Inject constructor(
 		val flow =
 			fx { ! ! dispatchers.io.effect { resolveFavorite(parameters = hero.toEntity()) } }
 
-		unsafe { runNonBlocking({ flow }) {
-			it.fold({ it.printStackTrace() }, { it.fold({ it.printStackTrace() }, {}) })
-		} }
+		unsafe {
+			runNonBlocking({ flow }) { result ->
+				result.fold(Throwable::printStackTrace) { it.fold(Throwable::printStackTrace) {} }
+			}
+		}
 	}
 }
